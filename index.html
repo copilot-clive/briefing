@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Briefing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            min-height: 100vh;
+            color: #ffffff;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #f39c12, #e74c3c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .header .date {
+            color: #888;
+            font-size: 1.1rem;
+        }
+        
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .section h2 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .stock-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+        }
+        
+        .stock-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.2s, background 0.2s;
+        }
+        
+        .stock-card:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.06);
+        }
+        
+        .stock-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        
+        .stock-symbol {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        
+        .stock-position {
+            font-size: 0.85rem;
+            color: #888;
+        }
+        
+        .stock-price {
+            text-align: right;
+        }
+        
+        .price-value {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #fff;
+        }
+        
+        .price-change {
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+        
+        .price-change.up {
+            background: rgba(0, 200, 83, 0.2);
+            color: #00c853;
+        }
+        
+        .price-change.down {
+            background: rgba(255, 23, 68, 0.2);
+            color: #ff1744;
+        }
+        
+        .sparkline-container {
+            width: 120px;
+            height: 40px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        
+        .summary-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .summary-card .label {
+            color: #888;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+        
+        .summary-card .value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .summary-card .change {
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .footer .crab {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 600px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .stock-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>☀️ Morning Briefing</h1>
+            <p class="date" id="current-date">Loading...</p>
+        </header>
+        
+        <section class="section">
+            <h2>📈 Portfolio Performance</h2>
+            <div class="stock-grid" id="portfolio-grid">
+                <!-- Stocks will be inserted here -->
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>🪙 Crypto & Commodities</h2>
+            <div class="stock-grid" id="crypto-grid">
+                <!-- Crypto will be inserted here -->
+            </div>
+        </section>
+        
+        <section class="section">
+            <h2>📊 Quick Summary</h2>
+            <div class="summary-grid" id="summary-grid">
+                <!-- Summary will be inserted here -->
+            </div>
+        </section>
+        
+        <footer class="footer">
+            <div class="crab">🦀</div>
+            <p>Generated by Clive | Updated <span id="update-time">-</span></p>
+        </footer>
+    </div>
+    
+    <script>
+        // Portfolio positions
+        const positions = {
+            'AAPL': 55.1933,
+            'AMZN': 60.3272,
+            'GOOGL': 70.6559,
+            'META': 21.0519,
+            'MSFT': 25.7869,
+            'NVDA': 610.844,
+            'TSLA': 45.7073
+        };
+        
+        // Stock data (will be updated by the Python script)
+        const stockData = {
+            'AAPL': { price: 259.48, change: 0.46 },
+            'AMZN': { price: 239.30, change: -1.01 },
+            'GOOGL': { price: 338.00, change: -0.07 },
+            'META': { price: 716.50, change: -2.95 },
+            'MSFT': { price: 430.29, change: -0.74 },
+            'NVDA': { price: 191.13, change: -0.72 },
+            'TSLA': { price: 430.41, change: 3.32 }
+        };
+        
+        const cryptoData = {
+            'BTC': { price: 78771, change: -6.08, label: 'Bitcoin' },
+            'ETH': { price: 2441, change: -9.43, label: 'Ethereum' },
+            'GOLD': { price: 5067.50, change: -5.37, label: 'Gold' },
+            'SILVER': { price: 98.50, change: -13.92, label: 'Silver' }
+        };
+        
+        // Set date
+        const now = new Date();
+        document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+        document.getElementById('update-time').textContent = now.toLocaleTimeString('en-US', {
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        // Render portfolio
+        const portfolioGrid = document.getElementById('portfolio-grid');
+        Object.entries(stockData).forEach(([symbol, data]) => {
+            const isUp = data.change >= 0;
+            const card = document.createElement('div');
+            card.className = 'stock-card';
+            card.innerHTML = `
+                <div class="stock-info">
+                    <span class="stock-symbol">${symbol}</span>
+                    <span class="stock-position">Position: ${positions[symbol]?.toFixed(4) || '-'}</span>
+                </div>
+                <div class="stock-price">
+                    <div class="price-value">$${data.price.toFixed(2)}</div>
+                    <span class="price-change ${isUp ? 'up' : 'down'}">${isUp ? '+' : ''}${data.change.toFixed(2)}%</span>
+                </div>
+            `;
+            portfolioGrid.appendChild(card);
+        });
+        
+        // Render crypto
+        const cryptoGrid = document.getElementById('crypto-grid');
+        Object.entries(cryptoData).forEach(([symbol, data]) => {
+            const isUp = data.change >= 0;
+            const priceFormat = ['BTC', 'ETH'].includes(symbol) ? 
+                `$${data.price.toLocaleString()}` : 
+                `$${data.price.toFixed(2)}`;
+            const card = document.createElement('div');
+            card.className = 'stock-card';
+            card.innerHTML = `
+                <div class="stock-info">
+                    <span class="stock-symbol">${symbol}</span>
+                    <span class="stock-position">${data.label}</span>
+                </div>
+                <div class="stock-price">
+                    <div class="price-value">${priceFormat}</div>
+                    <span class="price-change ${isUp ? 'up' : 'down'}">${isUp ? '+' : ''}${data.change.toFixed(2)}%</span>
+                </div>
+            `;
+            cryptoGrid.appendChild(card);
+        });
+        
+        // Calculate summary
+        const totalValue = Object.entries(stockData).reduce((sum, [symbol, data]) => {
+            return sum + (positions[symbol] || 0) * data.price;
+        }, 0);
+        
+        const winners = Object.entries(stockData).filter(([_, d]) => d.change > 0).length;
+        const losers = Object.entries(stockData).filter(([_, d]) => d.change < 0).length;
+        
+        const topGainer = Object.entries(stockData).reduce((best, [symbol, data]) => 
+            data.change > best.change ? { symbol, change: data.change } : best, 
+            { symbol: '', change: -Infinity }
+        );
+        
+        const summaryGrid = document.getElementById('summary-grid');
+        const summaryItems = [
+            { label: 'Portfolio Value', value: `$${totalValue.toLocaleString(undefined, {maximumFractionDigits: 0})}`, change: '' },
+            { label: 'Winners / Losers', value: `${winners} / ${losers}`, change: '' },
+            { label: 'Top Gainer', value: topGainer.symbol, change: `+${topGainer.change.toFixed(2)}%`, isUp: true },
+            { label: 'BTC Price', value: `$${cryptoData.BTC.price.toLocaleString()}`, change: `${cryptoData.BTC.change.toFixed(2)}%`, isUp: cryptoData.BTC.change >= 0 }
+        ];
+        
+        summaryItems.forEach(item => {
+            const card = document.createElement('div');
+            card.className = 'summary-card';
+            card.innerHTML = `
+                <div class="label">${item.label}</div>
+                <div class="value">${item.value}</div>
+                ${item.change ? `<div class="change" style="color: ${item.isUp ? '#00c853' : '#ff1744'}">${item.change}</div>` : ''}
+            `;
+            summaryGrid.appendChild(card);
+        });
+    </script>
+</body>
+</html>
