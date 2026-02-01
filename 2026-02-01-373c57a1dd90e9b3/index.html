@@ -22,6 +22,7 @@
             --accent-cyan: #22d3ee;
             --accent-pink: #f472b6;
             --accent-orange: #fb923c;
+            --accent-purple: #a29bfe;
             --radius: 20px;
             --radius-sm: 12px;
         }
@@ -124,7 +125,7 @@
         /* Portfolio Performance */
         .stock-row {
             display: grid;
-            grid-template-columns: 100px 1fr 90px 70px 100px;
+            grid-template-columns: 100px 1fr 90px 70px 100px 40px;
             align-items: center;
             padding: 14px 0;
             border-bottom: 1px solid var(--border);
@@ -160,6 +161,25 @@
         .stock-spark {
             width: 100px;
             height: 32px;
+        }
+        
+        /* Learn More Button */
+        .learn-more {
+            background: var(--bg-card-inner);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            padding: 6px 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .learn-more:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-main);
+            border-color: var(--accent-cyan);
         }
         
         /* Quick Summary */
@@ -242,6 +262,7 @@
             background: var(--bg-card-inner);
             border-radius: var(--radius-sm);
             padding: 16px;
+            position: relative;
         }
         
         .crypto-item .name {
@@ -265,6 +286,13 @@
             font-weight: 600;
         }
         
+        .crypto-item .learn-more {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 6px;
+        }
+        
         /* News */
         .news-list {
             display: flex;
@@ -276,6 +304,9 @@
             display: flex;
             align-items: flex-start;
             gap: 12px;
+            padding: 12px;
+            background: var(--bg-card-inner);
+            border-radius: var(--radius-sm);
         }
         
         .news-dot {
@@ -287,10 +318,15 @@
             flex-shrink: 0;
         }
         
+        .news-content {
+            flex: 1;
+        }
+        
         .news-text {
             font-size: 0.9rem;
             color: var(--text-secondary);
             line-height: 1.5;
+            margin-bottom: 8px;
         }
         
         /* Motivation */
@@ -329,16 +365,164 @@
             color: var(--text-muted);
         }
         
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .modal-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        
+        .modal-close {
+            background: var(--bg-card-inner);
+            border: none;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background: var(--accent-red);
+            color: white;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-section {
+            margin-bottom: 20px;
+        }
+        
+        .modal-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .modal-section h4 {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .modal-section p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        .modal-sources {
+            padding: 16px 24px;
+            background: var(--bg-card-inner);
+            border-top: 1px solid var(--border);
+        }
+        
+        .modal-sources h4 {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .modal-sources a {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            margin-bottom: 4px;
+        }
+        
+        .modal-sources a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Key Stats in Modal */
+        .modal-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .modal-stat {
+            background: var(--bg-card-inner);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .modal-stat .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        
+        .modal-stat .value {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        
         /* Responsive */
         @media (max-width: 900px) {
             .dashboard { grid-template-columns: 1fr; }
             .row-2 { grid-template-columns: 1fr; }
             .motivation-card { grid-column: span 1; }
             .stock-row { 
-                grid-template-columns: 80px 1fr 70px;
+                grid-template-columns: 80px 1fr 70px 40px;
                 gap: 8px;
             }
             .stock-details, .stock-spark { display: none; }
+            .modal-stats { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
@@ -426,6 +610,21 @@
         </footer>
     </div>
     
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modal-title">Title</div>
+                    <div class="modal-subtitle" id="modal-subtitle">Subtitle</div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-sources" id="modal-sources"></div>
+        </div>
+    </div>
+    
     <script>
         const DATA = {
             positions: {
@@ -433,29 +632,312 @@
                 'META': 21.0519, 'MSFT': 25.7869, 'NVDA': 610.844, 'TSLA': 45.7073
             },
             stocks: {
-                'AAPL': { price: 259.48, change: 0.46, data: [255, 256, 257, 256, 258, 259, 258, 259.48] },
-                'TSLA': { price: 430.41, change: 3.32, data: [416, 418, 420, 422, 425, 428, 430, 430.41] },
-                'NVDA': { price: 191.13, change: -0.72, data: [193, 192, 191, 192, 191, 190, 191, 191.13] },
-                'META': { price: 716.50, change: -2.95, data: [738, 735, 730, 725, 720, 718, 716, 716.50] },
-                'MSFT': { price: 430.29, change: -0.74, data: [433, 432, 431, 430, 431, 430, 430, 430.29] },
-                'GOOGL': { price: 338.00, change: -0.07, data: [338, 337, 338, 339, 338, 337, 338, 338.00] },
-                'AMZN': { price: 239.30, change: -1.01, data: [242, 241, 240, 241, 239, 238, 239, 239.30] }
+                'AAPL': { 
+                    price: 259.48, 
+                    change: 0.46, 
+                    data: [255, 256, 257, 256, 258, 259, 258, 259.48],
+                    name: 'Apple Inc.',
+                    marketCap: '$3.9T',
+                    pe: '32.1',
+                    weekHigh: '$260.10',
+                    summary: 'Apple reported strong Q1 2026 earnings, beating expectations with iPhone revenue up 8% YoY. Services revenue hit a new record at $23.1B. The Vision Pro 2 announcement is expected at WWDC, with analysts anticipating a more affordable model.',
+                    recent: 'Stock is trading near all-time highs following the earnings beat. Institutional buying has increased, with Berkshire Hathaway maintaining its position as the largest external shareholder.',
+                    sources: [
+                        { name: 'Reuters - Apple Q1 Earnings', url: 'https://www.reuters.com/technology/apple/' },
+                        { name: 'Yahoo Finance - AAPL', url: 'https://finance.yahoo.com/quote/AAPL' }
+                    ]
+                },
+                'TSLA': { 
+                    price: 430.41, 
+                    change: 3.32, 
+                    data: [416, 418, 420, 422, 425, 428, 430, 430.41],
+                    name: 'Tesla Inc.',
+                    marketCap: '$1.4T',
+                    pe: '112.5',
+                    weekHigh: '$435.20',
+                    summary: 'Tesla shares surged following news of accelerated Robotaxi deployment in Austin and San Francisco. The company also announced a partnership with Saudi Arabia for a new Gigafactory, expected to produce 500,000 vehicles annually by 2028.',
+                    recent: 'Elon Musk confirmed during the earnings call that Full Self-Driving v13 has achieved a significant safety milestone, with fewer interventions per mile than human drivers in test markets.',
+                    sources: [
+                        { name: 'Reuters - Tesla Robotaxi Expansion', url: 'https://www.reuters.com/business/autos-transportation/tesla/' },
+                        { name: 'Yahoo Finance - TSLA', url: 'https://finance.yahoo.com/quote/TSLA' }
+                    ]
+                },
+                'NVDA': { 
+                    price: 191.13, 
+                    change: -0.72, 
+                    data: [193, 192, 191, 192, 191, 190, 191, 191.13],
+                    name: 'NVIDIA Corporation',
+                    marketCap: '$4.7T',
+                    pe: '65.2',
+                    weekHigh: '$195.50',
+                    summary: 'NVIDIA continues to dominate the AI chip market with over 80% market share in data center GPUs. The Blackwell architecture is seeing strong demand, though supply constraints remain. Export restrictions to China continue to impact revenue projections.',
+                    recent: 'Minor pullback as investors take profits after the massive 2025 rally. Analysts remain bullish with average price targets around $220, citing continued AI infrastructure buildout.',
+                    sources: [
+                        { name: 'Reuters - NVIDIA AI Dominance', url: 'https://www.reuters.com/technology/nvidia/' },
+                        { name: 'Yahoo Finance - NVDA', url: 'https://finance.yahoo.com/quote/NVDA' }
+                    ]
+                },
+                'META': { 
+                    price: 716.50, 
+                    change: -2.95, 
+                    data: [738, 735, 730, 725, 720, 718, 716, 716.50],
+                    name: 'Meta Platforms Inc.',
+                    marketCap: '$1.8T',
+                    pe: '28.4',
+                    weekHigh: '$742.30',
+                    summary: 'Meta faces headwinds as EU regulators announced a new investigation into AI data practices. The company\'s Reality Labs division continues to lose money ($4.5B last quarter), though Quest 3 sales exceeded expectations.',
+                    recent: 'Stock down on concerns about increased AI infrastructure spending. Zuckerberg announced plans to invest $65B in AI infrastructure in 2026, higher than analyst expectations.',
+                    sources: [
+                        { name: 'Reuters - Meta EU Investigation', url: 'https://www.reuters.com/technology/meta/' },
+                        { name: 'Yahoo Finance - META', url: 'https://finance.yahoo.com/quote/META' }
+                    ]
+                },
+                'MSFT': { 
+                    price: 430.29, 
+                    change: -0.74, 
+                    data: [433, 432, 431, 430, 431, 430, 430, 430.29],
+                    name: 'Microsoft Corporation',
+                    marketCap: '$3.2T',
+                    pe: '35.6',
+                    weekHigh: '$438.10',
+                    summary: 'Microsoft\'s Azure cloud revenue grew 29% YoY, driven by AI workloads. Copilot adoption across enterprise customers exceeded 50% penetration. The Activision integration continues to boost gaming revenue.',
+                    recent: 'Slight decline as broader tech sector sees profit-taking. Long-term outlook remains positive with AI integration across all product lines driving growth.',
+                    sources: [
+                        { name: 'Reuters - Microsoft Azure Growth', url: 'https://www.reuters.com/technology/microsoft/' },
+                        { name: 'Yahoo Finance - MSFT', url: 'https://finance.yahoo.com/quote/MSFT' }
+                    ]
+                },
+                'GOOGL': { 
+                    price: 338.00, 
+                    change: -0.07, 
+                    data: [338, 337, 338, 339, 338, 337, 338, 338.00],
+                    name: 'Alphabet Inc.',
+                    marketCap: '$2.1T',
+                    pe: '24.8',
+                    weekHigh: '$342.50',
+                    summary: 'Google Search revenue remains stable despite AI disruption fears. YouTube advertising hit record highs, and Google Cloud grew 28% YoY. The DOJ antitrust case remains ongoing with a decision expected in Q2 2026.',
+                    recent: 'Trading flat as investors await clarity on the antitrust ruling. Gemini AI improvements have helped stabilize search market share against ChatGPT and Perplexity.',
+                    sources: [
+                        { name: 'Reuters - Google Antitrust Case', url: 'https://www.reuters.com/technology/google/' },
+                        { name: 'Yahoo Finance - GOOGL', url: 'https://finance.yahoo.com/quote/GOOGL' }
+                    ]
+                },
+                'AMZN': { 
+                    price: 239.30, 
+                    change: -1.01, 
+                    data: [242, 241, 240, 241, 239, 238, 239, 239.30],
+                    name: 'Amazon.com Inc.',
+                    marketCap: '$2.5T',
+                    pe: '42.3',
+                    weekHigh: '$245.80',
+                    summary: 'Amazon Web Services grew 19% YoY but faces increasing competition from Azure and Google Cloud. E-commerce margins improved due to automation and logistics optimization. Prime membership reached 250 million globally.',
+                    recent: 'Stock slightly down on AWS growth deceleration concerns. New Trainium AI chips are expected to help reduce costs and compete better against NVIDIA in the cloud AI space.',
+                    sources: [
+                        { name: 'Reuters - Amazon AWS Competition', url: 'https://www.reuters.com/technology/amazon/' },
+                        { name: 'Yahoo Finance - AMZN', url: 'https://finance.yahoo.com/quote/AMZN' }
+                    ]
+                }
             },
             crypto: [
-                { symbol: 'BTC', name: 'Bitcoin', price: 78771, change: -6.08 },
-                { symbol: 'ETH', name: 'Ethereum', price: 2441, change: -9.43 },
-                { symbol: 'GOLD', name: 'Gold /oz', price: 5067.50, change: -5.37 },
-                { symbol: 'SILVER', name: 'Silver /oz', price: 98.50, change: -13.92 }
+                { 
+                    symbol: 'BTC', 
+                    name: 'Bitcoin', 
+                    price: 78771, 
+                    change: -6.08,
+                    summary: 'Bitcoin dropped below $80K as profit-taking intensified following the January rally to $105K. Institutional outflows from spot ETFs totaled $1.2B this week. Miners are selling reserves ahead of the 2028 halving.',
+                    context: 'The correction follows a 40% rally in Q4 2025 driven by ETF inflows and regulatory clarity. Long-term holders remain steady, with on-chain data showing minimal panic selling.',
+                    sources: [
+                        { name: 'Reuters - Bitcoin ETF Outflows', url: 'https://www.reuters.com/technology/bitcoin/' },
+                        { name: 'CoinDesk - BTC Analysis', url: 'https://www.coindesk.com/markets/' }
+                    ]
+                },
+                { 
+                    symbol: 'ETH', 
+                    name: 'Ethereum', 
+                    price: 2441, 
+                    change: -9.43,
+                    summary: 'Ethereum underperforms Bitcoin as Layer 2 solutions continue to capture transaction fees. The Pectra upgrade scheduled for Q2 2026 aims to improve scalability. Staking yields remain around 4.2%.',
+                    context: 'ETH/BTC ratio at multi-year lows has raised concerns, though developers argue the ecosystem remains the most active for DeFi and NFT applications.',
+                    sources: [
+                        { name: 'Reuters - Ethereum Update', url: 'https://www.reuters.com/technology/ethereum/' },
+                        { name: 'CoinDesk - ETH Analysis', url: 'https://www.coindesk.com/markets/' }
+                    ]
+                },
+                { 
+                    symbol: 'GOLD', 
+                    name: 'Gold /oz', 
+                    price: 5067.50, 
+                    change: -5.37,
+                    summary: 'Gold retreated from record highs above $5,300 as the US dollar strengthened on hawkish Fed comments. Central bank buying remains strong, particularly from China, India, and Turkey.',
+                    context: 'Despite the pullback, gold is up 35% over the past 12 months. Geopolitical tensions and de-dollarization trends continue to support long-term demand.',
+                    sources: [
+                        { name: 'Reuters - Gold Markets', url: 'https://www.reuters.com/markets/commodities/gold/' },
+                        { name: 'Kitco - Gold News', url: 'https://www.kitco.com/news/gold/' }
+                    ]
+                },
+                { 
+                    symbol: 'SILVER', 
+                    name: 'Silver /oz', 
+                    price: 98.50, 
+                    change: -13.92,
+                    summary: 'Silver saw a sharp correction after touching $115/oz. Industrial demand from solar panels remains strong, but speculative long positions unwound rapidly this week.',
+                    context: 'The gold-silver ratio widened to 51:1, above historical averages. Silver\'s dual role as industrial metal and store of value creates higher volatility than gold.',
+                    sources: [
+                        { name: 'Reuters - Silver Markets', url: 'https://www.reuters.com/markets/commodities/silver/' },
+                        { name: 'Kitco - Silver News', url: 'https://www.kitco.com/news/silver/' }
+                    ]
+                }
             ],
             news: [
-                "US-Iran tensions escalating — Iran announced live-fire naval drills near US warships",
-                "Gaza ceasefire efforts continue with pressure from Turkey, Egypt, and Qatar",
-                "Assad regime has fallen in Syria; regional powers reassessing positions",
-                "Oil prices volatile amid Strait of Hormuz concerns"
+                {
+                    headline: 'US-Iran tensions escalating — Iran announced live-fire naval drills near US warships',
+                    summary: 'Iran\'s Revolutionary Guard announced large-scale naval exercises in the Strait of Hormuz, with live-fire drills planned within 20 nautical miles of US Navy vessels. The Pentagon has moved a second carrier group to the region.',
+                    context: 'Tensions have escalated following the collapse of the JCPOA revival talks in December 2025. Iran\'s uranium enrichment has reached 83% purity, close to weapons-grade levels. The US has reimposed maximum pressure sanctions.',
+                    sources: [
+                        { name: 'Reuters - Iran Naval Drills', url: 'https://www.reuters.com/world/middle-east/' },
+                        { name: 'AP News - Middle East', url: 'https://apnews.com/hub/middle-east' }
+                    ]
+                },
+                {
+                    headline: 'Gaza ceasefire efforts continue with pressure from Turkey, Egypt, and Qatar',
+                    summary: 'Mediators are pushing for a extended humanitarian pause following the January prisoner exchange. Turkey\'s Erdogan has proposed a new framework involving international peacekeepers, while Egypt hosts ongoing negotiations in Cairo.',
+                    context: 'The conflict has now lasted over 15 months with significant humanitarian concerns. The UN estimates over 2 million displaced persons and severe food insecurity throughout the territory.',
+                    sources: [
+                        { name: 'Reuters - Gaza Ceasefire Talks', url: 'https://www.reuters.com/world/middle-east/' },
+                        { name: 'Al Jazeera - Gaza', url: 'https://www.aljazeera.com/tag/gaza/' }
+                    ]
+                },
+                {
+                    headline: 'Assad regime has fallen in Syria; regional powers reassessing positions',
+                    summary: 'Following the December 2025 collapse of the Assad government, a transitional council has formed in Damascus. Russia has withdrawn most forces to its naval base in Tartus. Turkey, Israel, and Gulf states are competing for influence.',
+                    context: 'The power vacuum has created uncertainty about Syria\'s future governance. Kurdish forces maintain control in the northeast, while various opposition groups vie for territory. Refugee return discussions have begun with neighboring countries.',
+                    sources: [
+                        { name: 'Reuters - Syria Transition', url: 'https://www.reuters.com/world/middle-east/syria/' },
+                        { name: 'BBC News - Syria', url: 'https://www.bbc.com/news/world/middle_east' }
+                    ]
+                },
+                {
+                    headline: 'Oil prices volatile amid Strait of Hormuz concerns',
+                    summary: 'Brent crude swung between $82-89 this week as traders priced in potential supply disruptions. About 20% of global oil passes through the Strait of Hormuz daily. OPEC+ has signaled readiness to increase output if needed.',
+                    context: 'Energy markets remain sensitive to Middle East tensions. US strategic petroleum reserves are at 40-year lows following 2022-2023 releases, limiting intervention options.',
+                    sources: [
+                        { name: 'Reuters - Oil Markets', url: 'https://www.reuters.com/business/energy/' },
+                        { name: 'Bloomberg - Energy', url: 'https://www.bloomberg.com/energy' }
+                    ]
+                }
             ]
         };
         
         const stockOrder = ['AAPL', 'TSLA', 'NVDA', 'META', 'MSFT', 'GOOGL', 'AMZN'];
+        
+        // Modal functions
+        function openModal(type, id) {
+            const overlay = document.getElementById('modal-overlay');
+            const title = document.getElementById('modal-title');
+            const subtitle = document.getElementById('modal-subtitle');
+            const body = document.getElementById('modal-body');
+            const sources = document.getElementById('modal-sources');
+            
+            let data;
+            
+            if (type === 'stock') {
+                data = DATA.stocks[id];
+                title.textContent = `${id} — ${data.name}`;
+                subtitle.textContent = `$${data.price.toFixed(2)} · ${data.change >= 0 ? '+' : ''}${data.change.toFixed(2)}%`;
+                
+                body.innerHTML = `
+                    <div class="modal-section">
+                        <h4>Key Metrics</h4>
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <div class="label">Market Cap</div>
+                                <div class="value">${data.marketCap}</div>
+                            </div>
+                            <div class="modal-stat">
+                                <div class="label">P/E Ratio</div>
+                                <div class="value">${data.pe}</div>
+                            </div>
+                            <div class="modal-stat">
+                                <div class="label">52W High</div>
+                                <div class="value">${data.weekHigh}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-section">
+                        <h4>Overview</h4>
+                        <p>${data.summary}</p>
+                    </div>
+                    <div class="modal-section">
+                        <h4>Recent Developments</h4>
+                        <p>${data.recent}</p>
+                    </div>
+                `;
+                
+                sources.innerHTML = `
+                    <h4>Sources</h4>
+                    ${data.sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name} ↗</a>`).join('')}
+                `;
+            } else if (type === 'crypto') {
+                data = DATA.crypto.find(c => c.symbol === id);
+                const priceStr = data.price >= 1000 ? '$' + data.price.toLocaleString() : '$' + data.price.toFixed(2);
+                title.textContent = `${data.symbol} — ${data.name}`;
+                subtitle.textContent = `${priceStr} · ${data.change >= 0 ? '+' : ''}${data.change.toFixed(2)}%`;
+                
+                body.innerHTML = `
+                    <div class="modal-section">
+                        <h4>What's Happening</h4>
+                        <p>${data.summary}</p>
+                    </div>
+                    <div class="modal-section">
+                        <h4>Context</h4>
+                        <p>${data.context}</p>
+                    </div>
+                `;
+                
+                sources.innerHTML = `
+                    <h4>Sources</h4>
+                    ${data.sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name} ↗</a>`).join('')}
+                `;
+            } else if (type === 'news') {
+                data = DATA.news[id];
+                title.textContent = 'Middle East Briefing';
+                subtitle.textContent = 'Detailed analysis';
+                
+                body.innerHTML = `
+                    <div class="modal-section">
+                        <h4>Headline</h4>
+                        <p><strong>${data.headline}</strong></p>
+                    </div>
+                    <div class="modal-section">
+                        <h4>Summary</h4>
+                        <p>${data.summary}</p>
+                    </div>
+                    <div class="modal-section">
+                        <h4>Background & Context</h4>
+                        <p>${data.context}</p>
+                    </div>
+                `;
+                
+                sources.innerHTML = `
+                    <h4>Sources</h4>
+                    ${data.sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name} ↗</a>`).join('')}
+                `;
+            }
+            
+            overlay.classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+        }
+        
+        document.getElementById('modal-overlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
         
         // Calculate totals
         let totalValue = 0;
@@ -482,6 +964,7 @@
                 <div class="stock-price">$${stock.price.toFixed(2)}</div>
                 <div class="stock-change ${isUp ? 'up' : 'down'}">${isUp ? '↑' : '↓'} ${Math.abs(stock.change).toFixed(2)}%</div>
                 <div class="stock-spark"><canvas id="spark-${sym}"></canvas></div>
+                <button class="learn-more" onclick="openModal('stock', '${sym}')">More</button>
             `;
             stocksList.appendChild(row);
             
@@ -548,6 +1031,7 @@
             const item = document.createElement('div');
             item.className = 'crypto-item';
             item.innerHTML = `
+                <button class="learn-more" onclick="openModal('crypto', '${c.symbol}')">More</button>
                 <div class="name">${c.symbol}</div>
                 <div class="sub">${c.name}</div>
                 <div class="price">${priceStr}</div>
@@ -558,11 +1042,17 @@
         
         // News
         const newsList = document.getElementById('news-list');
-        DATA.news.forEach(text => {
-            const item = document.createElement('div');
-            item.className = 'news-item';
-            item.innerHTML = `<div class="news-dot"></div><div class="news-text">${text}</div>`;
-            newsList.appendChild(item);
+        DATA.news.forEach((item, idx) => {
+            const newsItem = document.createElement('div');
+            newsItem.className = 'news-item';
+            newsItem.innerHTML = `
+                <div class="news-dot"></div>
+                <div class="news-content">
+                    <div class="news-text">${item.headline}</div>
+                    <button class="learn-more" onclick="openModal('news', ${idx})">Learn more</button>
+                </div>
+            `;
+            newsList.appendChild(newsItem);
         });
     </script>
 </body>
