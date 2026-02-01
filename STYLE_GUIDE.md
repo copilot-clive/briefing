@@ -1,0 +1,311 @@
+# Morning Briefing Style Guide
+
+A dark, minimal dashboard aesthetic for daily briefings.
+
+---
+
+## Color Palette
+
+### Backgrounds
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `--bg-main` | `#0d0d1a` | Page background (deep navy-black) |
+| `--bg-card` | `#1a1a2e` | Card backgrounds |
+| `--bg-card-inner` | `#252540` | Nested elements, summary boxes |
+| `--border` | `rgba(255, 255, 255, 0.08)` | Subtle dividers and card borders |
+
+### Text
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `--text-primary` | `#ffffff` | Headlines, values, emphasis |
+| `--text-secondary` | `rgba(255, 255, 255, 0.7)` | Body text, descriptions |
+| `--text-muted` | `rgba(255, 255, 255, 0.4)` | Labels, captions, subtitles |
+
+### Accents
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `--accent-green` | `#4ade80` | Positive values, gains, winners |
+| `--accent-red` | `#f87171` | Negative values, losses, alerts |
+| `--accent-cyan` | `#22d3ee` | Info, highlights, gradients |
+| `--accent-pink` | `#f472b6` | Secondary accent |
+| `--accent-orange` | `#fb923c` | Warnings, bullets, attention |
+| `--accent-purple` | `#a29bfe` | Motivation, special sections |
+
+---
+
+## Typography
+
+### Font
+```css
+font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+```
+
+### Scale
+| Element | Size | Weight | Notes |
+|---------|------|--------|-------|
+| Page title | `2.5rem` | 700 | Gradient text optional |
+| Card title | `1rem` | 600 | |
+| Card subtitle | `0.75rem` | 400 | `--text-muted` |
+| Body text | `0.9rem` | 400 | `--text-secondary` |
+| Large values | `2.5rem` | 700 | Portfolio totals |
+| Medium values | `1.5rem` | 700 | Summary stats |
+| Small values | `1.1rem` | 700 | Prices |
+| Labels | `0.7rem` | 400 | Uppercase, letter-spacing: 1px |
+| Percentages | `0.8rem` | 600 | Color-coded |
+
+### Gradient Title (optional)
+```css
+background: linear-gradient(135deg, #22d3ee, #a78bfa);
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+```
+
+---
+
+## Spacing
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| Page padding | `40px 24px` | Body padding |
+| Card padding | `24px` | Internal card padding |
+| Card gap | `20px` | Between cards |
+| Section gap | `20px` | Between rows |
+| Inner element gap | `12px` | Between items in a list/grid |
+| Header margin | `40px` | Below page header |
+
+---
+
+## Border Radius
+
+| Token | Value | Usage |
+|-------|-------|-------|
+| `--radius` | `20px` | Cards |
+| `--radius-sm` | `12px` | Inner boxes, icons, buttons |
+
+---
+
+## Cards
+
+### Base Card
+```css
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+}
+```
+
+### Card Header Pattern
+```html
+<div class="card-header">
+    <div class="card-icon [color]">🎯</div>
+    <div>
+        <div class="card-title">Title</div>
+        <div class="card-subtitle">Subtitle text</div>
+    </div>
+</div>
+```
+
+### Icon Colors
+```css
+.card-icon.green { background: rgba(74, 222, 128, 0.15); }
+.card-icon.cyan { background: rgba(34, 211, 238, 0.15); }
+.card-icon.orange { background: rgba(251, 146, 60, 0.15); }
+.card-icon.pink { background: rgba(244, 114, 182, 0.15); }
+.card-icon.purple { background: rgba(167, 139, 250, 0.15); }
+```
+
+---
+
+## Components
+
+### Data Row (Stocks)
+```
+[Symbol] [Details (muted)] [Price] [Change %] [Sparkline]
+```
+- Grid: `100px 1fr 90px 70px 100px`
+- Border bottom: `1px solid var(--border)`
+- Padding: `14px 0`
+
+### Summary Box
+```css
+.summary-item {
+    background: var(--bg-card-inner);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+    text-align: center;
+}
+```
+
+### Crypto/Stat Card
+```css
+.crypto-item {
+    background: var(--bg-card-inner);
+    border-radius: var(--radius-sm);
+    padding: 16px;
+}
+```
+
+### News Bullet
+```html
+<div class="news-item">
+    <div class="news-dot"></div> <!-- 8px orange circle -->
+    <div class="news-text">Text here</div>
+</div>
+```
+
+### Sparkline Charts
+- Height: `32px`
+- Width: `100px`
+- Line width: `2px`
+- Tension: `0.4` (smooth curves)
+- No points, no axes, no legend
+- Color: `--accent-green` (up) or `--accent-red` (down)
+
+---
+
+## Layout
+
+### Main Grid
+```css
+.dashboard {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 20px;
+}
+```
+
+### Secondary Row
+```css
+.row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+```
+
+### Full-width Card
+```css
+.motivation-card {
+    grid-column: span 2;
+}
+```
+
+### Container
+```css
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+```
+
+---
+
+## Header
+
+```html
+<header class="header">
+    <div class="header-emoji">👋</div>
+    <h1>Morning Briefing</h1>
+    <p class="date">Sunday, February 1, 2026</p>
+    <p class="greeting">Good morning, Bernhard. Here's your daily snapshot.</p>
+</header>
+```
+
+- Centered
+- Emoji: `3rem`
+- Margin bottom: `40px`
+
+---
+
+## Footer
+
+```html
+<footer class="footer">
+    <div class="footer-crab">🦀</div>
+    <p class="footer-text">Generated by Clive · Last updated 08:36 AM</p>
+</footer>
+```
+
+- Centered
+- Crab: `2rem`
+- Text: `0.75rem`, `--text-muted`
+- Padding: `40px 0 16px`
+
+---
+
+## Responsive Breakpoints
+
+### Mobile (< 900px)
+- Single column layout
+- Hide stock details and sparklines
+- Simplified data rows
+
+```css
+@media (max-width: 900px) {
+    .dashboard { grid-template-columns: 1fr; }
+    .row-2 { grid-template-columns: 1fr; }
+    .motivation-card { grid-column: span 1; }
+    .stock-row { 
+        grid-template-columns: 80px 1fr 70px;
+    }
+    .stock-details, .stock-spark { display: none; }
+}
+```
+
+---
+
+## Emoji Usage
+
+| Section | Emoji |
+|---------|-------|
+| Header greeting | 👋 |
+| Portfolio | 📈 |
+| Summary | 📊 |
+| Crypto | 🪙 |
+| News/World | 🌍 |
+| Motivation | 💡 |
+| Footer | 🦀 |
+
+---
+
+## Do's and Don'ts
+
+### Do
+- Keep cards minimal with plenty of breathing room
+- Use color sparingly — green/red for data, muted for labels
+- Let the data be the hero
+- Use subtle borders, not heavy shadows
+- Maintain consistent spacing
+
+### Don't
+- Add hover effects that are too flashy
+- Use more than 2-3 accent colors per card
+- Crowd elements together
+- Use pure black (`#000`) — always use the navy-black
+- Add unnecessary decorative elements
+
+---
+
+## Quick Reference CSS Variables
+
+```css
+:root {
+    --bg-main: #0d0d1a;
+    --bg-card: #1a1a2e;
+    --bg-card-inner: #252540;
+    --border: rgba(255, 255, 255, 0.08);
+    --text-primary: #ffffff;
+    --text-secondary: rgba(255, 255, 255, 0.7);
+    --text-muted: rgba(255, 255, 255, 0.4);
+    --accent-green: #4ade80;
+    --accent-red: #f87171;
+    --accent-cyan: #22d3ee;
+    --accent-pink: #f472b6;
+    --accent-orange: #fb923c;
+    --accent-purple: #a29bfe;
+    --radius: 20px;
+    --radius-sm: 12px;
+}
+```
