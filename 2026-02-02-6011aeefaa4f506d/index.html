@@ -466,13 +466,13 @@
                 }
             },
             crypto: {
-                'BTC': { amount: 0.82, price: 77447, change: -1.75, name: 'Bitcoin', value: 63507,
+                'BTC': { amount: 0.607, price: 77447, change: -1.76, name: 'Bitcoin', value: 46981,
                     technical: { trend: 'Correcting', rsi: 45, support: '$74,000', resistance: '$82,000' },
                     sentiment: 'Neutral—profit-taking after January rally to $105K. ETF outflows $1.2B this week.',
                     news: [{ headline: 'Bitcoin drops below $80K amid risk-off', source: 'CoinDesk', time: '1 day ago' }, { headline: 'Spot ETF outflows $1.2B this week', source: 'Bloomberg', time: '2 days ago' }, { headline: 'Fed rate path in focus', source: 'Reuters', time: '1 day ago' }],
                     sources: [{ name: 'CoinDesk', url: 'https://www.coindesk.com/price/bitcoin' }]
                 },
-                'USDC': { amount: 5488.85, price: 1.00, change: 0, name: 'USD Coin', value: 5488.85,
+                'USDC': { amount: 2.40, price: 1.00, change: 0, name: 'USD Coin', value: 2.40,
                     technical: { trend: 'Stable', rsi: 50, support: '$1.00', resistance: '$1.00' },
                     sentiment: 'Stablecoin—1:1 USD peg. Circle-issued, fully reserved.',
                     news: [{ headline: 'Circle USDC reserves fully audited', source: 'Circle', time: '1 week ago' }],
@@ -484,21 +484,21 @@
                     news: [{ headline: 'Ethereum rebounds 4% at support', source: 'CoinDesk', time: '1 day ago' }, { headline: 'Pectra upgrade Q2 2026', source: 'The Block', time: '1 week ago' }],
                     sources: [{ name: 'CoinDesk', url: 'https://www.coindesk.com/price/ethereum' }]
                 },
-                'ADA': { amount: 2800, price: 0.82, change: 2.15, name: 'Cardano', value: 2296,
+                'ADA': { amount: 0.37, price: 0.29, change: -2.96, name: 'Cardano', value: 0.11,
                     technical: { trend: 'Recovering', rsi: 42, support: '$0.75', resistance: '$0.90' },
                     sentiment: 'Mixed—ecosystem growth continues but price lagging BTC.',
                     news: [{ headline: 'Cardano DeFi TVL reaches new high', source: 'CoinDesk', time: '3 days ago' }],
                     sources: [{ name: 'CoinDesk', url: 'https://www.coindesk.com/price/cardano' }]
                 },
-                'XRP': { amount: 1880, price: 0.52, change: -1.20, name: 'XRP', value: 978,
+                'XRP': { amount: 0.47, price: 1.59, change: -3.49, name: 'XRP', value: 0.74,
                     technical: { trend: 'Neutral', rsi: 46, support: '$0.48', resistance: '$0.58' },
                     sentiment: 'Waiting on SEC case final resolution. Ripple partnerships expanding.',
                     news: [{ headline: 'Ripple expands APAC partnerships', source: 'CoinTelegraph', time: '2 days ago' }],
                     sources: [{ name: 'CoinDesk', url: 'https://www.coindesk.com/price/xrp' }]
                 },
-                'OTHER': { amount: 0, price: 0, change: 0, name: 'Other (15+ coins)', value: 4565,
+                'OTHER': { amount: 0, price: 0, change: -2.5, name: 'Dust (15+ coins)', value: 5,
                     technical: { trend: 'Mixed', rsi: 50, support: 'Varies', resistance: 'Varies' },
-                    sentiment: 'Small positions in TRX, BNB, XLM, TRUMP, ETHW, DAI, 1INCH, HNT, SHIB, ENJ, etc.',
+                    sentiment: 'Dust positions: BNB $3, USDC $2, XRP $0.74, USDT, TRX, ETHW, DAI, ADA, XLM, TRUMP, DOGE, HIVE, SHIB, ENJ, ICX, LUNC. Total <$10.',
                     news: [],
                     sources: []
                 }
@@ -518,7 +518,7 @@
         };
         
         const stockOrder = ['VOO', 'NVDA', 'GOOGL', 'TSLA', 'META', 'AMZN', 'AAPL', 'MSFT'];
-        const cryptoOrder = ['BTC', 'ETH', 'USDC', 'ADA', 'XRP', 'OTHER'];
+        const cryptoOrder = ['BTC', 'ETH', 'OTHER'];
         
         // Calculate totals
         let stocksTotal = DATA.cash;
