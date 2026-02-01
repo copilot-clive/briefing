@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Briefing | Bernhard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-main: #0d0d1a;
+            --bg-card: #1a1a2e;
+            --bg-card-inner: #252540;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-cyan: #22d3ee;
+            --accent-pink: #f472b6;
+            --accent-orange: #fb923c;
+            --accent-purple: #a29bfe;
+            --radius: 20px;
+            --radius-sm: 12px;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 40px 24px;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header-emoji {
+            font-size: 3rem;
+            margin-bottom: 16px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #22d3ee, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+        
+        .header .date {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+        }
+        
+        .header .greeting {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 20px;
+        }
+        
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .card-icon.green { background: rgba(74, 222, 128, 0.15); }
+        .card-icon.cyan { background: rgba(34, 211, 238, 0.15); }
+        .card-icon.orange { background: rgba(251, 146, 60, 0.15); }
+        .card-icon.pink { background: rgba(244, 114, 182, 0.15); }
+        .card-icon.purple { background: rgba(167, 139, 250, 0.15); }
+        
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        
+        .card-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .stock-row {
+            display: grid;
+            grid-template-columns: 100px 1fr 90px 70px 100px 40px;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            gap: 12px;
+        }
+        
+        .stock-row:last-child { border-bottom: none; }
+        
+        .stock-symbol {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        .stock-details {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .stock-price {
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        .stock-change {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        .stock-change.up { color: var(--accent-green); }
+        .stock-change.down { color: var(--accent-red); }
+        
+        .stock-spark {
+            width: 100px;
+            height: 32px;
+        }
+        
+        .learn-more {
+            background: var(--bg-card-inner);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            padding: 6px 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .learn-more:hover {
+            background: var(--accent-cyan);
+            color: var(--bg-main);
+            border-color: var(--accent-cyan);
+        }
+        
+        .summary-card .value-large {
+            text-align: center;
+            padding: 24px 0;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        
+        .summary-card .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .summary-card .amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .summary-item {
+            background: var(--bg-card-inner);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .summary-item .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .summary-item .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        
+        .summary-item .ticker {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        
+        .summary-item .pct {
+            font-size: 0.85rem;
+            margin-top: 2px;
+        }
+        
+        .green { color: var(--accent-green); }
+        .red { color: var(--accent-red); }
+        
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .crypto-item {
+            background: var(--bg-card-inner);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            position: relative;
+        }
+        
+        .crypto-item .name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .crypto-item .sub {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        
+        .crypto-item .price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-top: 8px;
+        }
+        
+        .crypto-item .change {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .crypto-item .learn-more {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 4px 6px;
+        }
+        
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .news-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-card-inner);
+            border-radius: var(--radius-sm);
+        }
+        
+        .news-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+        
+        .news-content {
+            flex: 1;
+        }
+        
+        .news-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+        
+        .motivation-card {
+            grid-column: span 2;
+            margin-top: 20px;
+            background: linear-gradient(135deg, var(--bg-card) 0%, #2d2d4a 100%);
+        }
+        
+        .quote-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+        
+        .quote-author {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 40px 0 16px;
+        }
+        
+        .footer-crab {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        .footer-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 24px;
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+        }
+        
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            max-width: 600px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .modal-header {
+            padding: 24px 24px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        
+        .modal-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+        
+        .modal-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+        
+        .modal-close {
+            background: var(--bg-card-inner);
+            border: none;
+            color: var(--text-muted);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-close:hover {
+            background: var(--accent-red);
+            color: white;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-section {
+            margin-bottom: 20px;
+        }
+        
+        .modal-section:last-child {
+            margin-bottom: 0;
+        }
+        
+        .modal-section h4 {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .modal-section p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+        
+        .modal-sources {
+            padding: 16px 24px;
+            background: var(--bg-card-inner);
+            border-top: 1px solid var(--border);
+        }
+        
+        .modal-sources h4 {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .modal-sources a {
+            display: block;
+            font-size: 0.8rem;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            margin-bottom: 4px;
+        }
+        
+        .modal-sources a:hover {
+            text-decoration: underline;
+        }
+        
+        .modal-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-top: 12px;
+        }
+        
+        .modal-stat {
+            background: var(--bg-card-inner);
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .modal-stat .label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        
+        .modal-stat .value {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 4px;
+        }
+        
+        @media (max-width: 900px) {
+            .dashboard { grid-template-columns: 1fr; }
+            .row-2 { grid-template-columns: 1fr; }
+            .motivation-card { grid-column: span 1; }
+            .stock-row { 
+                grid-template-columns: 80px 1fr 70px 40px;
+                gap: 8px;
+            }
+            .stock-details, .stock-spark { display: none; }
+            .modal-stats { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-emoji">👋</div>
+            <h1>Morning Briefing</h1>
+            <p class="date">Monday, February 2, 2026</p>
+            <p class="greeting">Good morning, Bernhard. Here's your daily snapshot.</p>
+        </header>
+        
+        <div class="dashboard">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon green">📈</div>
+                    <div>
+                        <div class="card-title">Portfolio Performance</div>
+                        <div class="card-subtitle">Your Magnificent 7 holdings</div>
+                    </div>
+                </div>
+                <div id="stocks-list"></div>
+            </div>
+            
+            <div class="card summary-card">
+                <div class="card-header">
+                    <div class="card-icon cyan">📊</div>
+                    <div>
+                        <div class="card-title">Quick Summary</div>
+                        <div class="card-subtitle">Portfolio overview</div>
+                    </div>
+                </div>
+                <div class="value-large">
+                    <div class="label">Portfolio Value</div>
+                    <div class="amount" id="total-value">$0</div>
+                </div>
+                <div class="summary-grid" id="summary-grid"></div>
+            </div>
+        </div>
+        
+        <div class="row-2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon orange">🪙</div>
+                    <div>
+                        <div class="card-title">Crypto & Commodities</div>
+                        <div class="card-subtitle">Digital assets & precious metals</div>
+                    </div>
+                </div>
+                <div class="crypto-grid" id="crypto-grid"></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon pink">🌍</div>
+                    <div>
+                        <div class="card-title">Middle East Briefing</div>
+                        <div class="card-subtitle">Key developments</div>
+                    </div>
+                </div>
+                <div class="news-list" id="news-list"></div>
+            </div>
+        </div>
+        
+        <div class="card motivation-card">
+            <div class="card-header">
+                <div class="card-icon purple">💡</div>
+                <div>
+                    <div class="card-title">Daily Motivation</div>
+                    <div class="card-subtitle">Start the week strong</div>
+                </div>
+            </div>
+            <p class="quote-text">"The only way to do great work is to love what you do. If you haven't found it yet, keep looking. Don't settle. As with all matters of the heart, you'll know when you find it."</p>
+            <p class="quote-author">— Steve Jobs</p>
+        </div>
+        
+        <footer class="footer">
+            <div class="footer-crab">🦀</div>
+            <p class="footer-text">Generated by Clive · Last updated 07:30 AM</p>
+        </footer>
+    </div>
+    
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <div>
+                    <div class="modal-title" id="modal-title">Title</div>
+                    <div class="modal-subtitle" id="modal-subtitle">Subtitle</div>
+                </div>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div class="modal-body" id="modal-body"></div>
+            <div class="modal-sources" id="modal-sources"></div>
+        </div>
+    </div>
+    
+    <script>
+        const DATA = {
+            positions: {
+                'AAPL': 55.1933, 'AMZN': 60.3272, 'GOOGL': 70.6559,
+                'META': 21.0519, 'MSFT': 25.7869, 'NVDA': 610.844, 'TSLA': 45.7073
+            },
+            stocks: {
+                'AAPL': { 
+                    price: 259.48, 
+                    change: 0.46, 
+                    data: [255.16, 256.20, 257.10, 258.28, 259.48],
+                    name: 'Apple Inc.',
+                    marketCap: '$3.81T',
+                    pe: '32.89',
+                    weekHigh: '$288.62',
+                    summary: 'Apple reported strong Q1 FY26 earnings, beating expectations with revenue of $143.76B and net income of $42.1B. iPhone 17 demand remains robust, with bullish sentiment from major analysts including Jefferies raising price target to $286.54.',
+                    recent: 'Shares trading near highs after earnings beat. Apple-Google AI partnership expected to de-risk AI strategy for iPhone maker. Stock up 4.55% YTD, outperforming the S&P 500.',
+                    sources: [
+                        { name: 'Yahoo Finance - AAPL', url: 'https://finance.yahoo.com/quote/AAPL' },
+                        { name: 'Reuters - Apple', url: 'https://www.reuters.com/technology/apple/' }
+                    ]
+                },
+                'TSLA': { 
+                    price: 430.41, 
+                    change: 3.32, 
+                    data: [416.57, 418.90, 422.70, 425.58, 430.41],
+                    name: 'Tesla Inc.',
+                    marketCap: '$1.62T',
+                    pe: '398.53',
+                    weekHigh: '$498.83',
+                    summary: 'Tesla surged 3.32% on reports that SpaceX may merge with Tesla or xAI per Bloomberg. Q4 FY25 revenue hit $24.9B. Focus on autonomous technology and the Optimus robot continues to drive investor interest.',
+                    recent: 'Concerns about US infrastructure for Tesla\'s Terafab ambitions remain. Chinese EV rivals reporting strong sales adds competitive pressure. Stock up 4.29% YTD with 158% 3-year return.',
+                    sources: [
+                        { name: 'Yahoo Finance - TSLA', url: 'https://finance.yahoo.com/quote/TSLA' },
+                        { name: 'Reuters - Tesla', url: 'https://www.reuters.com/business/autos-transportation/tesla/' }
+                    ]
+                },
+                'NVDA': { 
+                    price: 188.52, 
+                    change: 1.10, 
+                    data: [186.47, 185.70, 187.24, 188.00, 188.52],
+                    name: 'NVIDIA Corporation',
+                    marketCap: '$4.59T',
+                    pe: '46.78',
+                    weekHigh: '$212.19',
+                    summary: 'NVIDIA received approval to sell H200 chips in China, boosting revenue projections. Earnings report on February 25 is critical. The company maintains dominance in AI chips with market cap reaching $4.59T.',
+                    recent: 'Stock showing 59.24% 1-year return and remarkable 826% 3-year return. Three key catalysts could drive further gains according to analysts. Pre-market showing continued strength at $192.',
+                    sources: [
+                        { name: 'Yahoo Finance - NVDA', url: 'https://finance.yahoo.com/quote/NVDA' },
+                        { name: 'Reuters - NVIDIA', url: 'https://www.reuters.com/technology/nvidia/' }
+                    ]
+                },
+                'META': { 
+                    price: 672.97, 
+                    change: 0.09, 
+                    data: [672.36, 664.66, 674.65, 676.82, 672.97],
+                    name: 'Meta Platforms Inc.',
+                    marketCap: '$1.70T',
+                    pe: '29.76',
+                    weekHigh: '$796.25',
+                    summary: 'Meta preparing for Q4 earnings report (Jan 28) amid concerns over significant AI spending and its impact on profitability. Q3 FY25 showed revenue of $51.24B. Pinterest layoffs and Corning-Meta cable deal making headlines.',
+                    recent: 'Stock trading flat as market digests AI investment plans. Analyst price targets averaging $832.78 with highs at $1,117. Reality Labs continues to drive long-term metaverse strategy despite losses.',
+                    sources: [
+                        { name: 'Yahoo Finance - META', url: 'https://finance.yahoo.com/quote/META' },
+                        { name: 'Reuters - Meta', url: 'https://www.reuters.com/technology/meta/' }
+                    ]
+                },
+                'MSFT': { 
+                    price: 430.29, 
+                    change: -0.74, 
+                    data: [433.50, 431.20, 439.17, 426.45, 430.29],
+                    name: 'Microsoft Corporation',
+                    marketCap: '$3.20T',
+                    pe: '26.96',
+                    weekHigh: '$555.45',
+                    summary: 'Microsoft reported mixed Q2 FY26 earnings with 23% increase in net income. Azure cloud growth continues but faces scrutiny over AI investments. Stock affected by broader tech sell-off.',
+                    recent: 'Cloud growth concerns weigh on shares despite strong fundamentals. Analyst price targets averaging $599.58. Dividend yield at 0.85% provides income stability.',
+                    sources: [
+                        { name: 'Yahoo Finance - MSFT', url: 'https://finance.yahoo.com/quote/MSFT' },
+                        { name: 'Reuters - Microsoft', url: 'https://www.reuters.com/technology/microsoft/' }
+                    ]
+                },
+                'GOOGL': { 
+                    price: 338.00, 
+                    change: -0.07, 
+                    data: [338.25, 337.50, 334.32, 339.95, 338.00],
+                    name: 'Alphabet Inc.',
+                    marketCap: '$4.09T',
+                    pe: '33.43',
+                    weekHigh: '$342.29',
+                    summary: 'Waymo reportedly securing $16B funding round valuing it at $110B amid regulatory scrutiny. Project Genie gaining traction in gaming. Earnings due February 4.',
+                    recent: 'Stock up 7.99% YTD and 68.93% over past year, significantly outperforming S&P 500. Strong 251% 3-year return. Apple-Google AI partnership viewed positively by analysts.',
+                    sources: [
+                        { name: 'Yahoo Finance - GOOGL', url: 'https://finance.yahoo.com/quote/GOOGL' },
+                        { name: 'Reuters - Alphabet', url: 'https://www.reuters.com/technology/google/' }
+                    ]
+                },
+                'AMZN': { 
+                    price: 244.68, 
+                    change: 2.63, 
+                    data: [238.42, 239.68, 238.08, 242.50, 244.68],
+                    name: 'Amazon.com Inc.',
+                    marketCap: '$2.62T',
+                    pe: '34.61',
+                    weekHigh: '$258.60',
+                    summary: 'Amazon shifting strategy by closing Fresh and Go stores to focus on delivery services and Whole Foods expansion. Restructuring includes 16,000 job cuts to enhance efficiency.',
+                    recent: 'Earnings due February 5. AWS AgentCore services launching to compete in enterprise AI. Stock showing solid momentum ahead of report. Analyst target $296.06.',
+                    sources: [
+                        { name: 'Yahoo Finance - AMZN', url: 'https://finance.yahoo.com/quote/AMZN' },
+                        { name: 'Reuters - Amazon', url: 'https://www.reuters.com/technology/amazon/' }
+                    ]
+                }
+            },
+            crypto: [
+                { 
+                    symbol: 'BTC', 
+                    name: 'Bitcoin', 
+                    price: 77447, 
+                    change: -1.75,
+                    summary: 'Bitcoin trading at $77,447 with market cap of $1.55T. Price pulled back from recent highs as broader risk-off sentiment affects crypto markets.',
+                    context: 'Network hashrate at 824 EH/s. Block reward currently 3.13 BTC. Supply approaching 19.98M of 21M maximum. January jobs data this week could influence Fed rate expectations.',
+                    sources: [
+                        { name: 'CoinDesk - Bitcoin', url: 'https://www.coindesk.com/price/bitcoin' },
+                        { name: 'Reuters - Crypto', url: 'https://www.reuters.com/technology/cryptocurrency/' }
+                    ]
+                },
+                { 
+                    symbol: 'ETH', 
+                    name: 'Ethereum', 
+                    price: 2307.59, 
+                    change: 3.92,
+                    summary: 'Ethereum rebounding with 3.92% gain, trading at $2,307.59. Market cap at $278.5B with strong 24h volume of $20.6B.',
+                    context: 'Circulating supply at 120.69M ETH. Network continues proof-of-stake validation. Block number at 24.36M. Layer 2 activity driving ecosystem growth.',
+                    sources: [
+                        { name: 'CoinDesk - Ethereum', url: 'https://www.coindesk.com/price/ethereum' },
+                        { name: 'Reuters - Crypto', url: 'https://www.reuters.com/technology/cryptocurrency/' }
+                    ]
+                },
+                { 
+                    symbol: 'GOLD', 
+                    name: 'Gold /oz', 
+                    price: 4745.10, 
+                    change: -11.39,
+                    summary: 'Gold crashed 11.39% from record highs above $5,300. Chinese speculators set the stage for the gold and silver crash according to Bloomberg. Massive volatility with day\'s range of $4,700 - $5,480.',
+                    context: 'Fed jitters reframing risk/reward for gold miners. Despite crash, gold remains up significantly from 2025 levels. Central bank buying from China, India, and Turkey continues to provide support.',
+                    sources: [
+                        { name: 'Bloomberg - Gold Crash', url: 'https://www.bloomberg.com/news/articles/gold-silver-crash' },
+                        { name: 'Yahoo Finance - Gold', url: 'https://finance.yahoo.com/quote/GC=F' }
+                    ]
+                },
+                { 
+                    symbol: 'SILVER', 
+                    name: 'Silver /oz', 
+                    price: 113.83, 
+                    change: 7.43,
+                    summary: 'Silver rebounding 7.43% after sharp correction, now at $113.83/oz. Sprott Silver Miners ETF surpassed $1B in assets. Day\'s range $110.77 - $116.17.',
+                    context: 'Industrial demand from solar panels remains strong. Gold-silver ratio normalizing after recent extreme moves. Strategists say "don\'t wait" to enter precious metals positions.',
+                    sources: [
+                        { name: 'Yahoo Finance - Silver', url: 'https://finance.yahoo.com/quote/SI=F' },
+                        { name: 'Kitco - Silver', url: 'https://www.kitco.com/news/silver/' }
+                    ]
+                }
+            ],
+            news: [
+                {
+                    headline: 'Gaza\'s Rafah crossing with Egypt to reopen Sunday — Israel confirms',
+                    summary: 'Israel has confirmed the Rafah crossing between Gaza and Egypt will reopen on Sunday, allowing humanitarian aid and limited civilian movement after months of closure.',
+                    context: 'The crossing has been a critical lifeline for Gaza. Its reopening comes amid ongoing ceasefire negotiations and international pressure for humanitarian access. Egypt has been coordinating with multiple parties on logistics.',
+                    sources: [
+                        { name: 'Reuters - Rafah Crossing', url: 'https://www.reuters.com/world/middle-east/' },
+                        { name: 'AP News - Gaza', url: 'https://apnews.com/hub/israel-hamas-war' }
+                    ]
+                },
+                {
+                    headline: 'Syrian government and Kurds agree historic integration deal — US hails milestone',
+                    summary: 'The Syrian government and Kurdish forces (SDF) have reached a landmark integration agreement. The US State Department hailed it as a "historic milestone" for regional stability.',
+                    context: 'The deal will see gradual integration of Kurdish forces and administration into the Syrian state. Divisions within the SDF had impeded year-long negotiations. Fighting in eastern Aleppo Province had threatened to destabilize northeastern Syria.',
+                    sources: [
+                        { name: 'Reuters - Syria Kurds Deal', url: 'https://www.reuters.com/world/middle-east/syria/' },
+                        { name: 'BBC - Syria', url: 'https://www.bbc.com/news/world/middle_east' }
+                    ]
+                },
+                {
+                    headline: 'Iran\'s president warns any US attack on Khamenei would mean "all-out war"',
+                    summary: 'Iran\'s Foreign Minister Araghchi stated armed forces had "fingers on the trigger" to respond to any US strike. President warns of severe escalation if Supreme Leader targeted.',
+                    context: 'Tensions remain elevated following collapse of JCPOA revival talks. Iran\'s nuclear program continues advancing. The US has two carrier groups in the region. Hezbollah may be hesitant to conduct direct action that could trigger full-scale conflict.',
+                    sources: [
+                        { name: 'BBC - Iran Warning', url: 'https://www.bbc.com/news/world/middle_east' },
+                        { name: 'Times of Israel', url: 'https://www.timesofisrael.com/' }
+                    ]
+                },
+                {
+                    headline: 'Israel launches strikes in Gaza — at least 26 killed targeting Hamas commanders',
+                    summary: 'Israeli military conducted strikes in Gaza that local health officials say killed at least 26 people. The IDF stated the attacks targeted Hamas commanders.',
+                    context: 'The strikes come as Rafah crossing prepares to reopen. Turkey, Egypt, and Qatar continue applying pressure for extended ceasefire. International community closely monitoring civilian casualties.',
+                    sources: [
+                        { name: 'NY Times - Israel Gaza Strikes', url: 'https://www.nytimes.com/2026/01/31/world/middleeast/israel-strikes-gaza-rafah-reopening.html' },
+                        { name: 'Reuters - Middle East', url: 'https://www.reuters.com/world/middle-east/' }
+                    ]
+                }
+            ]
+        };
+        
+        const stockOrder = ['AAPL', 'TSLA', 'NVDA', 'META', 'MSFT', 'GOOGL', 'AMZN'];
+        
+        function openModal(type, id) {
+            const overlay = document.getElementById('modal-overlay');
+            const title = document.getElementById('modal-title');
+            const subtitle = document.getElementById('modal-subtitle');
+            const body = document.getElementById('modal-body');
+            const sources = document.getElementById('modal-sources');
+            
+            let data;
+            
+            if (type === 'stock') {
+                data = DATA.stocks[id];
+                title.textContent = `${id} — ${data.name}`;
+                subtitle.textContent = `$${data.price.toFixed(2)} · ${data.change >= 0 ? '+' : ''}${data.change.toFixed(2)}%`;
+                
+                body.innerHTML = `
+                    <div class="modal-section">
+                        <h4>Key Metrics</h4>
+                        <div class="modal-stats">
+                            <div class="modal-stat">
+                                <div class="label">Market Cap</div>
+                                <div class="value">${data.marketCap}</div>
+                            </div>
+                            <div class="modal-stat">
+                                <div class="label">P/E Ratio</div>
+                                <div class="value">${data.pe}</div>
+                            </div>
+                            <div class="modal-stat">
+                                <div class="label">52W High</div>
+                                <div class="value">${data.weekHigh}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-section">
+                        <h4>Overview</h4>
+                        <p>${data.summary}</p>
+                    </div>
+                    <div class="modal-section">
+                        <h4>Recent Developments</h4>
+                        <p>${data.recent}</p>
+                    </div>
+                `;
+                
+                sources.innerHTML = `
+                    <h4>Sources</h4>
+                    ${data.sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name} ↗</a>`).join('')}
+                `;
+            } else if (type === 'crypto') {
+                data = DATA.crypto.find(c => c.symbol === id);
+                const priceStr = data.price >= 1000 ? '$' + data.price.toLocaleString() : '$' + data.price.toFixed(2);
+                title.textContent = `${data.symbol} — ${data.name}`;
+                subtitle.textContent = `${priceStr} · ${data.change >= 0 ? '+' : ''}${data.change.toFixed(2)}%`;
+                
+                body.innerHTML = `
+                    <div class="modal-section">
+                        <h4>What's Happening</h4>
+                        <p>${data.summary}</p>
+                    </div>
+                    <div class="modal-section">
+                        <h4>Context</h4>
+                        <p>${data.context}</p>
+                    </div>
+                `;
+                
+                sources.innerHTML = `
+                    <h4>Sources</h4>
+                    ${data.sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name} ↗</a>`).join('')}
+                `;
+            } else if (type === 'news') {
+                data = DATA.news[id];
+                title.textContent = 'Middle East Briefing';
+                subtitle.textContent = 'Detailed analysis';
+                
+                body.innerHTML = `
+                    <div class="modal-section">
+                        <h4>Headline</h4>
+                        <p><strong>${data.headline}</strong></p>
+                    </div>
+                    <div class="modal-section">
+                        <h4>Summary</h4>
+                        <p>${data.summary}</p>
+                    </div>
+                    <div class="modal-section">
+                        <h4>Background & Context</h4>
+                        <p>${data.context}</p>
+                    </div>
+                `;
+                
+                sources.innerHTML = `
+                    <h4>Sources</h4>
+                    ${data.sources.map(s => `<a href="${s.url}" target="_blank" rel="noopener">${s.name} ↗</a>`).join('')}
+                `;
+            }
+            
+            overlay.classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('modal-overlay').classList.remove('active');
+        }
+        
+        document.getElementById('modal-overlay').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+        
+        // Calculate totals
+        let totalValue = 0;
+        stockOrder.forEach(sym => {
+            totalValue += DATA.positions[sym] * DATA.stocks[sym].price;
+        });
+        document.getElementById('total-value').textContent = '$' + totalValue.toLocaleString(undefined, { maximumFractionDigits: 0 });
+        
+        // Render stocks
+        const stocksList = document.getElementById('stocks-list');
+        stockOrder.forEach((sym, idx) => {
+            const stock = DATA.stocks[sym];
+            const shares = DATA.positions[sym];
+            const value = shares * stock.price;
+            const isUp = stock.change >= 0;
+            
+            const row = document.createElement('div');
+            row.className = 'stock-row';
+            row.innerHTML = `
+                <div>
+                    <div class="stock-symbol">${sym}</div>
+                </div>
+                <div class="stock-details">${shares.toFixed(4)} shares · $${value.toLocaleString(undefined, {maximumFractionDigits: 0})} value</div>
+                <div class="stock-price">$${stock.price.toFixed(2)}</div>
+                <div class="stock-change ${isUp ? 'up' : 'down'}">${isUp ? '↑' : '↓'} ${Math.abs(stock.change).toFixed(2)}%</div>
+                <div class="stock-spark"><canvas id="spark-${sym}"></canvas></div>
+                <button class="learn-more" onclick="openModal('stock', '${sym}')">More</button>
+            `;
+            stocksList.appendChild(row);
+            
+            setTimeout(() => {
+                const ctx = document.getElementById(`spark-${sym}`);
+                if (ctx) {
+                    new Chart(ctx.getContext('2d'), {
+                        type: 'line',
+                        data: {
+                            labels: stock.data.map((_, i) => i),
+                            datasets: [{
+                                data: stock.data,
+                                borderColor: isUp ? '#4ade80' : '#f87171',
+                                backgroundColor: 'transparent',
+                                tension: 0.4,
+                                borderWidth: 2,
+                                pointRadius: 0
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: { legend: { display: false } },
+                            scales: { x: { display: false }, y: { display: false } }
+                        }
+                    });
+                }
+            }, idx * 50);
+        });
+        
+        // Summary
+        const winners = stockOrder.filter(s => DATA.stocks[s].change > 0).length;
+        const losers = stockOrder.filter(s => DATA.stocks[s].change < 0).length;
+        const topGainer = stockOrder.reduce((a, b) => DATA.stocks[a].change > DATA.stocks[b].change ? a : b);
+        const topLoser = stockOrder.reduce((a, b) => DATA.stocks[a].change < DATA.stocks[b].change ? a : b);
+        
+        document.getElementById('summary-grid').innerHTML = `
+            <div class="summary-item">
+                <div class="label">Winners</div>
+                <div class="value green">${winners}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Losers</div>
+                <div class="value red">${losers}</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Top Gainer</div>
+                <div class="ticker green">${topGainer}</div>
+                <div class="pct green">+${DATA.stocks[topGainer].change.toFixed(2)}%</div>
+            </div>
+            <div class="summary-item">
+                <div class="label">Top Loser</div>
+                <div class="ticker red">${topLoser}</div>
+                <div class="pct red">${DATA.stocks[topLoser].change.toFixed(2)}%</div>
+            </div>
+        `;
+        
+        // Crypto
+        const cryptoGrid = document.getElementById('crypto-grid');
+        DATA.crypto.forEach(c => {
+            const isUp = c.change >= 0;
+            const priceStr = c.price >= 1000 ? '$' + c.price.toLocaleString() : '$' + c.price.toFixed(2);
+            
+            const item = document.createElement('div');
+            item.className = 'crypto-item';
+            item.innerHTML = `
+                <button class="learn-more" onclick="openModal('crypto', '${c.symbol}')">More</button>
+                <div class="name">${c.symbol}</div>
+                <div class="sub">${c.name}</div>
+                <div class="price">${priceStr}</div>
+                <div class="change ${isUp ? 'green' : 'red'}">${isUp ? '↑' : '↓'} ${Math.abs(c.change).toFixed(2)}%</div>
+            `;
+            cryptoGrid.appendChild(item);
+        });
+        
+        // News
+        const newsList = document.getElementById('news-list');
+        DATA.news.forEach((item, idx) => {
+            const newsItem = document.createElement('div');
+            newsItem.className = 'news-item';
+            newsItem.innerHTML = `
+                <div class="news-dot"></div>
+                <div class="news-content">
+                    <div class="news-text">${item.headline}</div>
+                    <button class="learn-more" onclick="openModal('news', ${idx})">Learn more</button>
+                </div>
+            `;
+            newsList.appendChild(newsItem);
+        });
+    </script>
+</body>
+</html>
