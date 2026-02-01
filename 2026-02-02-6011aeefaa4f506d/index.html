@@ -26,9 +26,7 @@
             --radius: 20px;
             --radius-sm: 12px;
         }
-        
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--bg-main);
@@ -36,32 +34,46 @@
             min-height: 100vh;
             padding: 40px 24px;
         }
-        
-        .container { max-width: 1100px; margin: 0 auto; }
-        
+        .container { max-width: 1200px; margin: 0 auto; }
         .header { text-align: center; margin-bottom: 40px; }
         .header-emoji { font-size: 3rem; margin-bottom: 16px; }
         .header h1 {
-            font-size: 2.5rem;
-            font-weight: 700;
+            font-size: 2.5rem; font-weight: 700;
             background: linear-gradient(135deg, #22d3ee, #a78bfa);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
         }
         .header .date { font-size: 1rem; color: var(--text-secondary); margin-bottom: 4px; }
         .header .greeting { font-size: 0.9rem; color: var(--text-muted); }
         
-        .dashboard { display: grid; grid-template-columns: 1.4fr 1fr; gap: 20px; }
+        /* Net Worth Banner */
+        .net-worth-banner {
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d2d4a 100%);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .net-worth-main { }
+        .net-worth-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .net-worth-value { font-size: 3rem; font-weight: 800; margin-top: 4px; }
+        .net-worth-breakdown { display: flex; gap: 32px; }
+        .breakdown-item { text-align: right; }
+        .breakdown-label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; }
+        .breakdown-value { font-size: 1.4rem; font-weight: 600; margin-top: 2px; }
         
+        .dashboard { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; }
         .card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
             padding: 24px;
         }
-        
         .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
         .card-icon {
             width: 40px; height: 40px;
@@ -79,90 +91,45 @@
         
         .stock-row {
             display: grid;
-            grid-template-columns: 100px 1fr 90px 70px 100px 40px;
+            grid-template-columns: 90px 1fr 90px 70px 90px;
             align-items: center;
-            padding: 14px 0;
+            padding: 12px 0;
             border-bottom: 1px solid var(--border);
-            gap: 12px;
+            gap: 10px;
             cursor: pointer;
             transition: background 0.2s;
         }
         .stock-row:hover { background: rgba(255,255,255,0.02); margin: 0 -12px; padding-left: 12px; padding-right: 12px; }
         .stock-row:last-child { border-bottom: none; }
-        .stock-symbol { font-weight: 700; font-size: 1rem; }
-        .stock-details { font-size: 0.75rem; color: var(--text-muted); }
-        .stock-price { font-weight: 600; text-align: right; }
-        .stock-change { font-size: 0.8rem; font-weight: 600; text-align: right; }
+        .stock-symbol { font-weight: 700; font-size: 0.95rem; }
+        .stock-shares { font-size: 0.7rem; color: var(--text-muted); }
+        .stock-value { font-weight: 600; text-align: right; font-size: 0.9rem; }
+        .stock-change { font-size: 0.75rem; font-weight: 600; text-align: right; }
         .stock-change.up { color: var(--accent-green); }
         .stock-change.down { color: var(--accent-red); }
-        .stock-spark { width: 100px; height: 32px; }
+        .stock-spark { width: 90px; height: 28px; }
         
-        .learn-more {
-            background: var(--bg-card-inner);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-muted);
-            font-size: 0.7rem;
-            padding: 6px 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }
-        .learn-more:hover {
-            background: var(--accent-cyan);
-            color: var(--bg-main);
-            border-color: var(--accent-cyan);
-        }
-        
-        .summary-card .value-large {
-            text-align: center;
-            padding: 24px 0;
-            border-bottom: 1px solid var(--border);
-            margin-bottom: 20px;
-        }
-        .summary-card .label {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .summary-card .amount { font-size: 2.5rem; font-weight: 700; margin-top: 4px; }
-        .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        .summary-item {
-            background: var(--bg-card-inner);
-            border-radius: var(--radius-sm);
-            padding: 16px;
-            text-align: center;
-        }
-        .summary-item .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .summary-item .value { font-size: 1.5rem; font-weight: 700; margin-top: 4px; }
-        .summary-item .ticker { font-size: 1.2rem; font-weight: 700; margin-top: 4px; }
-        .summary-item .pct { font-size: 0.85rem; margin-top: 2px; }
-        .green { color: var(--accent-green); }
-        .red { color: var(--accent-red); }
-        
-        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
-        .crypto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .crypto-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .crypto-item {
             background: var(--bg-card-inner);
             border-radius: var(--radius-sm);
-            padding: 16px;
-            position: relative;
+            padding: 14px;
             cursor: pointer;
             transition: all 0.2s;
         }
         .crypto-item:hover { background: #2d2d50; }
-        .crypto-item .name { font-weight: 600; font-size: 0.95rem; }
-        .crypto-item .sub { font-size: 0.7rem; color: var(--text-muted); }
-        .crypto-item .price { font-size: 1.1rem; font-weight: 700; margin-top: 8px; }
-        .crypto-item .change { font-size: 0.8rem; font-weight: 600; }
-        .crypto-item .learn-more { position: absolute; top: 12px; right: 12px; padding: 4px 6px; }
+        .crypto-item .name { font-weight: 600; font-size: 0.9rem; }
+        .crypto-item .sub { font-size: 0.65rem; color: var(--text-muted); }
+        .crypto-item .row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 6px; }
+        .crypto-item .price { font-size: 1rem; font-weight: 700; }
+        .crypto-item .change { font-size: 0.75rem; font-weight: 600; }
+        .green { color: var(--accent-green); }
+        .red { color: var(--accent-red); }
         
-        .news-list { display: flex; flex-direction: column; gap: 12px; }
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .news-list { display: flex; flex-direction: column; gap: 10px; }
         .news-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
+            display: flex; align-items: flex-start; gap: 10px;
             padding: 12px;
             background: var(--bg-card-inner);
             border-radius: var(--radius-sm);
@@ -170,26 +137,24 @@
             transition: all 0.2s;
         }
         .news-item:hover { background: #2d2d50; }
-        .news-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-orange); margin-top: 6px; flex-shrink: 0; }
-        .news-content { flex: 1; }
-        .news-text { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 8px; }
+        .news-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent-orange); margin-top: 5px; flex-shrink: 0; }
+        .news-text { font-size: 0.85rem; color: var(--text-secondary); line-height: 1.4; }
         
         .motivation-card {
             grid-column: span 2;
             margin-top: 20px;
             background: linear-gradient(135deg, var(--bg-card) 0%, #2d2d4a 100%);
         }
-        .quote-text { font-size: 1.1rem; font-style: italic; color: var(--text-secondary); line-height: 1.7; margin-bottom: 12px; }
-        .quote-author { font-size: 0.85rem; color: var(--text-muted); }
+        .quote-text { font-size: 1.05rem; font-style: italic; color: var(--text-secondary); line-height: 1.6; margin-bottom: 10px; }
+        .quote-author { font-size: 0.8rem; color: var(--text-muted); }
         
         .footer { text-align: center; padding: 40px 0 16px; }
         .footer-crab { font-size: 2rem; margin-bottom: 8px; }
-        .footer-text { font-size: 0.75rem; color: var(--text-muted); }
+        .footer-text { font-size: 0.7rem; color: var(--text-muted); }
         
-        /* Modal Styles */
+        /* Modal */
         .modal-overlay {
-            display: none;
-            position: fixed;
+            display: none; position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
             background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(8px);
@@ -204,152 +169,70 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: var(--radius);
-            max-width: 700px;
-            width: 100%;
-            position: relative;
+            max-width: 700px; width: 100%;
         }
         .modal-header {
             padding: 24px 24px 16px;
             border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            position: sticky;
-            top: 0;
+            display: flex; justify-content: space-between; align-items: flex-start;
+            position: sticky; top: 0;
             background: var(--bg-card);
             border-radius: var(--radius) var(--radius) 0 0;
         }
-        .modal-title { font-size: 1.4rem; font-weight: 700; }
-        .modal-subtitle { font-size: 0.9rem; color: var(--text-muted); margin-top: 4px; }
+        .modal-title { font-size: 1.3rem; font-weight: 700; }
+        .modal-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
         .modal-close {
-            background: var(--bg-card-inner);
-            border: none;
+            background: var(--bg-card-inner); border: none;
             color: var(--text-muted);
             width: 36px; height: 36px;
-            border-radius: 8px;
-            cursor: pointer;
+            border-radius: 8px; cursor: pointer;
             font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
         }
         .modal-close:hover { background: var(--accent-red); color: white; }
         .modal-body { padding: 24px; }
         .modal-section { margin-bottom: 24px; }
         .modal-section:last-child { margin-bottom: 0; }
         .modal-section h4 {
-            font-size: 0.8rem;
-            color: var(--accent-cyan);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 0.75rem; color: var(--accent-cyan);
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
         }
-        .modal-section h4::before {
-            content: '';
-            width: 4px;
-            height: 16px;
-            background: var(--accent-cyan);
-            border-radius: 2px;
-        }
-        .modal-section p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; }
-        
-        .modal-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-        .modal-stat {
-            background: var(--bg-card-inner);
-            padding: 14px 12px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .modal-stat .label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
-        .modal-stat .value { font-size: 1.1rem; font-weight: 600; margin-top: 4px; }
-        
-        .sentiment-bar {
-            display: flex;
-            gap: 4px;
-            margin-top: 12px;
-        }
-        .sentiment-bar .bar {
-            height: 8px;
-            border-radius: 4px;
-            transition: all 0.3s;
-        }
+        .modal-section h4::before { content: ''; width: 4px; height: 14px; background: var(--accent-cyan); border-radius: 2px; }
+        .modal-section p { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.6; }
+        .modal-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .modal-stat { background: var(--bg-card-inner); padding: 12px 10px; border-radius: 8px; text-align: center; }
+        .modal-stat .label { font-size: 0.6rem; color: var(--text-muted); text-transform: uppercase; }
+        .modal-stat .value { font-size: 1rem; font-weight: 600; margin-top: 3px; }
+        .sentiment-bar { display: flex; gap: 3px; margin-top: 10px; }
+        .sentiment-bar .bar { height: 6px; border-radius: 3px; }
         .sentiment-bar .bar.buy { background: var(--accent-green); }
         .sentiment-bar .bar.hold { background: var(--accent-orange); }
         .sentiment-bar .bar.sell { background: var(--accent-red); }
-        
-        .sentiment-labels {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-        
-        .news-card {
-            background: var(--bg-card-inner);
-            border-radius: 10px;
-            padding: 14px;
-            margin-bottom: 10px;
-        }
-        .news-card:last-child { margin-bottom: 0; }
-        .news-card .headline { font-size: 0.9rem; font-weight: 500; color: var(--text-primary); margin-bottom: 6px; }
-        .news-card .meta { font-size: 0.75rem; color: var(--text-muted); display: flex; gap: 12px; }
-        .news-card .source { color: var(--accent-cyan); }
-        
-        .modal-sources {
-            padding: 16px 24px;
-            background: var(--bg-card-inner);
-            border-top: 1px solid var(--border);
-            border-radius: 0 0 var(--radius) var(--radius);
-        }
-        .modal-sources h4 {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 8px;
-        }
-        .modal-sources a {
-            display: inline-block;
-            font-size: 0.8rem;
-            color: var(--accent-cyan);
-            text-decoration: none;
-            margin-right: 16px;
-            margin-bottom: 4px;
-        }
-        .modal-sources a:hover { text-decoration: underline; }
-        
-        .tech-levels {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 12px;
-        }
-        .tech-level {
-            display: flex;
-            justify-content: space-between;
-            padding: 8px 12px;
-            background: var(--bg-card-inner);
-            border-radius: 6px;
-            font-size: 0.85rem;
-        }
+        .sentiment-labels { display: flex; justify-content: space-between; margin-top: 6px; font-size: 0.65rem; color: var(--text-muted); }
+        .tech-levels { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .tech-level { display: flex; justify-content: space-between; padding: 8px 10px; background: var(--bg-card-inner); border-radius: 6px; font-size: 0.8rem; }
         .tech-level .label { color: var(--text-muted); }
         .tech-level .value { font-weight: 600; }
+        .news-card { background: var(--bg-card-inner); border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+        .news-card:last-child { margin-bottom: 0; }
+        .news-card .headline { font-size: 0.85rem; font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+        .news-card .meta { font-size: 0.7rem; color: var(--text-muted); display: flex; gap: 10px; }
+        .news-card .source { color: var(--accent-cyan); }
+        .modal-sources { padding: 16px 24px; background: var(--bg-card-inner); border-top: 1px solid var(--border); border-radius: 0 0 var(--radius) var(--radius); }
+        .modal-sources h4 { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .modal-sources a { display: inline-block; font-size: 0.75rem; color: var(--accent-cyan); text-decoration: none; margin-right: 14px; }
+        .modal-sources a:hover { text-decoration: underline; }
         
         @media (max-width: 900px) {
             .dashboard { grid-template-columns: 1fr; }
             .row-2 { grid-template-columns: 1fr; }
             .motivation-card { grid-column: span 1; }
-            .stock-row { grid-template-columns: 80px 1fr 70px 40px; gap: 8px; }
-            .stock-details, .stock-spark { display: none; }
+            .net-worth-banner { flex-direction: column; text-align: center; }
+            .net-worth-breakdown { justify-content: center; }
+            .breakdown-item { text-align: center; }
+            .stock-row { grid-template-columns: 70px 1fr 70px; }
+            .stock-shares, .stock-spark { display: none; }
             .modal-stats { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
@@ -363,46 +246,53 @@
             <p class="greeting">Good morning, Bernhard. Here's your daily snapshot.</p>
         </header>
         
+        <!-- Net Worth Banner -->
+        <div class="net-worth-banner">
+            <div class="net-worth-main">
+                <div class="net-worth-label">Total Net Worth</div>
+                <div class="net-worth-value" id="net-worth">$0</div>
+            </div>
+            <div class="net-worth-breakdown">
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Stocks</div>
+                    <div class="breakdown-value" id="stocks-total">$0</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Crypto</div>
+                    <div class="breakdown-value" id="crypto-total">$0</div>
+                </div>
+                <div class="breakdown-item">
+                    <div class="breakdown-label">Cash</div>
+                    <div class="breakdown-value">$27.3K</div>
+                </div>
+            </div>
+        </div>
+        
         <div class="dashboard">
             <div class="card">
                 <div class="card-header">
                     <div class="card-icon green">📈</div>
                     <div>
-                        <div class="card-title">Portfolio Performance</div>
-                        <div class="card-subtitle">Your Magnificent 7 holdings</div>
+                        <div class="card-title">Stock Portfolio</div>
+                        <div class="card-subtitle">IBKR Holdings</div>
                     </div>
                 </div>
                 <div id="stocks-list"></div>
             </div>
             
-            <div class="card summary-card">
-                <div class="card-header">
-                    <div class="card-icon cyan">📊</div>
-                    <div>
-                        <div class="card-title">Quick Summary</div>
-                        <div class="card-subtitle">Portfolio overview</div>
-                    </div>
-                </div>
-                <div class="value-large">
-                    <div class="label">Portfolio Value</div>
-                    <div class="amount" id="total-value">$0</div>
-                </div>
-                <div class="summary-grid" id="summary-grid"></div>
-            </div>
-        </div>
-        
-        <div class="row-2">
             <div class="card">
                 <div class="card-header">
                     <div class="card-icon orange">🪙</div>
                     <div>
-                        <div class="card-title">Crypto & Commodities</div>
-                        <div class="card-subtitle">Digital assets & precious metals</div>
+                        <div class="card-title">Crypto Portfolio</div>
+                        <div class="card-subtitle">Binance Holdings</div>
                     </div>
                 </div>
                 <div class="crypto-grid" id="crypto-grid"></div>
             </div>
-            
+        </div>
+        
+        <div class="row-2">
             <div class="card">
                 <div class="card-header">
                     <div class="card-icon pink">🌍</div>
@@ -412,6 +302,17 @@
                     </div>
                 </div>
                 <div class="news-list" id="news-list"></div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon cyan">📰</div>
+                    <div>
+                        <div class="card-title">Market News</div>
+                        <div class="card-subtitle">Top stories</div>
+                    </div>
+                </div>
+                <div class="news-list" id="market-news"></div>
             </div>
         </div>
         
@@ -449,350 +350,248 @@
     
     <script>
         const DATA = {
-            positions: {
-                'AAPL': 55.1933, 'AMZN': 60.3272, 'GOOGL': 70.6559,
-                'META': 21.0519, 'MSFT': 25.7869, 'NVDA': 610.844, 'TSLA': 45.7073
-            },
+            cash: 27300,
             stocks: {
-                'AAPL': { 
-                    price: 259.48, change: 0.46, 
-                    data: [252.18, 255.16, 256.20, 258.28, 259.48],
-                    name: 'Apple Inc.',
-                    // Key Metrics
-                    marketCap: '$3.81T', pe: '32.89', eps: '$7.89', 
-                    weekHigh: '$288.62', weekLow: '$169.21', avgVolume: '46.6M',
-                    // Technical Analysis
-                    technical: {
-                        trend: 'Bullish',
-                        rsi: 58,
-                        support: '$252.18',
-                        resistance: '$261.90',
-                        sma50: '$248.50',
-                        sma200: '$225.30',
-                        signal: 'Buy on dips near support'
-                    },
-                    // Sentiment
-                    sentiment: {
-                        rating: 'Overweight',
-                        buy: 28, hold: 8, sell: 2,
-                        avgTarget: '$290.90',
-                        highTarget: '$350.00',
-                        lowTarget: '$205.00',
-                        summary: 'Strong institutional buying. JPMorgan raised PT to $315 citing iPhone demand. Jefferies maintains Hold but raised to $286.54 post-earnings.'
-                    },
-                    // Recent News
+                'VOO': { 
+                    shares: 491.7527, price: 635.18, change: 0.42,
+                    name: 'Vanguard S&P 500 ETF', type: 'ETF',
+                    data: [628, 630, 632, 634, 635.18],
+                    marketCap: '$1.2T AUM', pe: '24.5', expenseRatio: '0.03%', weekHigh: '$650', weekLow: '$520', dividend: '1.32%',
+                    technical: { trend: 'Bullish', rsi: 55, support: '$620', resistance: '$650', sma50: '$615', sma200: '$580', signal: 'Core holding—continue accumulating on dips' },
+                    sentiment: { rating: 'Core Hold', buy: 0, hold: 100, sell: 0, avgTarget: 'N/A', highTarget: 'N/A', lowTarget: 'N/A', summary: 'VOO tracks the S&P 500—the benchmark index. Low-cost passive exposure to 500 largest US companies. Your largest position at $312K.' },
                     news: [
-                        { headline: 'Apple Q1 beats expectations: Revenue $143.76B, guides 13-16% growth', source: 'CNBC', time: '2 days ago' },
-                        { headline: 'JPMorgan raises Apple price target to $315 on strong iPhone 17 demand', source: 'CNBC', time: '1 week ago' },
-                        { headline: 'Apple declares $0.26 dividend, $54B operating cash flow', source: 'StockTitan', time: '3 days ago' }
+                        { headline: 'S&P 500 ETFs see record inflows in January 2026', source: 'Bloomberg', time: '2 days ago' },
+                        { headline: 'Vanguard cuts expense ratios on key ETFs', source: 'Reuters', time: '1 week ago' },
+                        { headline: 'Index funds outperform 90% of active managers in 2025', source: 'Morningstar', time: '5 days ago' }
                     ],
-                    sources: [
-                        { name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/AAPL' },
-                        { name: 'CNBC', url: 'https://www.cnbc.com/quotes/AAPL' },
-                        { name: 'Reuters', url: 'https://www.reuters.com/technology/apple/' }
-                    ]
-                },
-                'TSLA': { 
-                    price: 430.41, change: 3.32, 
-                    data: [398.20, 416.57, 417.89, 425.58, 430.41],
-                    name: 'Tesla Inc.',
-                    marketCap: '$1.62T', pe: '398.53', eps: '$1.08',
-                    weekHigh: '$498.83', weekLow: '$214.25', avgVolume: '74.4M',
-                    technical: {
-                        trend: 'Volatile/Bullish',
-                        rsi: 62,
-                        support: '$416.57',
-                        resistance: '$439.88',
-                        sma50: '$385.20',
-                        sma200: '$312.40',
-                        signal: 'Momentum strong, watch for pullbacks to $416'
-                    },
-                    sentiment: {
-                        rating: 'Hold',
-                        buy: 18, hold: 22, sell: 8,
-                        avgTarget: '$418.89',
-                        highTarget: '$550.00',
-                        lowTarget: '$85.00',
-                        summary: 'Mixed sentiment. $20B spending plan signals pivot to AI/robotaxi. Q4 beat but annual revenue dropped 3% YoY—first ever decline. SpaceX merger rumors driving recent surge.'
-                    },
-                    news: [
-                        { headline: 'Tesla invests $2B in Musk\'s xAI, Cybercab production on track', source: 'Reuters', time: '4 days ago' },
-                        { headline: 'Q4 2025 beats expectations but annual revenue drops 3%', source: 'CNBC', time: '3 days ago' },
-                        { headline: 'Tesla to discontinue Model S and X production within months', source: 'NY Times', time: '3 days ago' }
-                    ],
-                    sources: [
-                        { name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/TSLA' },
-                        { name: 'Reuters', url: 'https://www.reuters.com/business/autos-transportation/tesla/' },
-                        { name: 'Electrek', url: 'https://electrek.co/guides/tesla/' }
-                    ]
+                    sources: [{ name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/VOO' }, { name: 'Vanguard', url: 'https://investor.vanguard.com/etf/profile/VOO' }]
                 },
                 'NVDA': { 
-                    price: 188.52, change: 1.10, 
-                    data: [185.70, 186.47, 187.24, 188.00, 188.52],
+                    shares: 610.844, price: 188.52, change: 1.10,
                     name: 'NVIDIA Corporation',
-                    marketCap: '$4.59T', pe: '46.78', eps: '$4.03',
-                    weekHigh: '$212.19', weekLow: '$86.62', avgVolume: '184.4M',
-                    technical: {
-                        trend: 'Consolidating',
-                        rsi: 52,
-                        support: '$185.70',
-                        resistance: '$195.50',
-                        sma50: '$178.40',
-                        sma200: '$142.80',
-                        signal: 'Neutral—wait for breakout above $195 or buy at $180'
-                    },
-                    sentiment: {
-                        rating: 'Outperform',
-                        buy: 52, hold: 6, sell: 1,
-                        avgTarget: '$253.19',
-                        highTarget: '$320.00',
-                        lowTarget: '$135.00',
-                        summary: 'Overwhelmingly bullish. H200 China approval is major catalyst. Earnings Feb 25 critical. Bernstein rates 82/100. 826% 3-year return reflects AI dominance.'
-                    },
+                    data: [185.70, 186.47, 187.24, 188.00, 188.52],
+                    marketCap: '$4.59T', pe: '46.78', eps: '$4.03', weekHigh: '$212.19', weekLow: '$86.62', avgVolume: '184.4M',
+                    technical: { trend: 'Consolidating', rsi: 52, support: '$185.70', resistance: '$195.50', sma50: '$178.40', sma200: '$142.80', signal: 'Neutral—wait for breakout above $195' },
+                    sentiment: { rating: 'Outperform', buy: 52, hold: 6, sell: 1, avgTarget: '$253.19', highTarget: '$320.00', lowTarget: '$135.00', summary: 'Your 2nd largest position. H200 China approval is major catalyst. Earnings Feb 25 critical. 826% 3-year return reflects AI dominance.' },
                     news: [
                         { headline: 'NVIDIA receives approval to sell H200 chips in China', source: 'Yahoo Finance', time: '5 days ago' },
-                        { headline: '3 catalysts that could drive NVIDIA stock higher in 2026', source: 'Yahoo Finance', time: '1 week ago' },
-                        { headline: 'Earnings report Feb 25 could determine AI trade trajectory', source: 'Bloomberg', time: '3 days ago' }
+                        { headline: '3 catalysts that could drive NVIDIA stock higher', source: 'Yahoo Finance', time: '1 week ago' },
+                        { headline: 'Earnings Feb 25 could determine AI trade trajectory', source: 'Bloomberg', time: '3 days ago' }
                     ],
-                    sources: [
-                        { name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/NVDA' },
-                        { name: 'Reuters', url: 'https://www.reuters.com/technology/nvidia/' },
-                        { name: 'Seeking Alpha', url: 'https://seekingalpha.com/symbol/NVDA' }
-                    ]
-                },
-                'META': { 
-                    price: 672.97, change: 0.09, 
-                    data: [664.66, 672.36, 674.65, 676.82, 672.97],
-                    name: 'Meta Platforms Inc.',
-                    marketCap: '$1.70T', pe: '29.76', eps: '$22.61',
-                    weekHigh: '$796.25', weekLow: '$479.80', avgVolume: '19.3M',
-                    technical: {
-                        trend: 'Neutral/Consolidating',
-                        rsi: 48,
-                        support: '$664.66',
-                        resistance: '$696.82',
-                        sma50: '$685.20',
-                        sma200: '$612.50',
-                        signal: 'Wait for earnings clarity before adding'
-                    },
-                    sentiment: {
-                        rating: 'Buy',
-                        buy: 45, hold: 10, sell: 2,
-                        avgTarget: '$832.78',
-                        highTarget: '$1,117.00',
-                        lowTarget: '$685.00',
-                        summary: 'Strong fundamentals clouded by AI spending concerns. Q4 earnings report critical. Guggenheim rates 82/100. Reality Labs losses continue but Quest 3 exceeds expectations.'
-                    },
-                    news: [
-                        { headline: 'Meta Q4 earnings preview: AI spending scrutiny intensifies', source: 'Yahoo Finance', time: '2 days ago' },
-                        { headline: 'Pinterest layoffs, Corning-Meta undersea cable deal announced', source: 'Yahoo Finance', time: '3 days ago' },
-                        { headline: 'Analysts see 24% upside despite investment concerns', source: 'Seeking Alpha', time: '1 week ago' }
-                    ],
-                    sources: [
-                        { name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/META' },
-                        { name: 'Reuters', url: 'https://www.reuters.com/technology/meta/' },
-                        { name: 'The Verge', url: 'https://www.theverge.com/meta' }
-                    ]
-                },
-                'MSFT': { 
-                    price: 430.29, change: -0.74, 
-                    data: [426.45, 433.50, 439.17, 431.20, 430.29],
-                    name: 'Microsoft Corporation',
-                    marketCap: '$3.20T', pe: '26.96', eps: '$15.96',
-                    weekHigh: '$555.45', weekLow: '$344.79', avgVolume: '27.2M',
-                    technical: {
-                        trend: 'Bearish short-term',
-                        rsi: 42,
-                        support: '$426.45',
-                        resistance: '$439.47',
-                        sma50: '$448.30',
-                        sma200: '$425.60',
-                        signal: 'Caution—trading below 50-day MA, wait for stabilization'
-                    },
-                    sentiment: {
-                        rating: 'Overweight',
-                        buy: 42, hold: 12, sell: 1,
-                        avgTarget: '$599.58',
-                        highTarget: '$650.00',
-                        lowTarget: '$420.00',
-                        summary: 'Long-term bullish despite near-term headwinds. Azure growth 23% but AI capex concerns weigh. Copilot adoption strong. 0.85% dividend yield provides cushion.'
-                    },
-                    news: [
-                        { headline: 'Microsoft Q2 earnings: 23% net income growth, Azure concerns persist', source: 'CNBC', time: '3 days ago' },
-                        { headline: 'Tech sell-off hits Microsoft despite strong fundamentals', source: 'Yahoo Finance', time: '2 days ago' },
-                        { headline: 'Copilot enterprise adoption exceeds expectations', source: 'Reuters', time: '1 week ago' }
-                    ],
-                    sources: [
-                        { name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/MSFT' },
-                        { name: 'Reuters', url: 'https://www.reuters.com/technology/microsoft/' },
-                        { name: 'CNBC', url: 'https://www.cnbc.com/quotes/MSFT' }
-                    ]
+                    sources: [{ name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/NVDA' }, { name: 'Reuters', url: 'https://www.reuters.com/technology/nvidia/' }]
                 },
                 'GOOGL': { 
-                    price: 338.00, change: -0.07, 
-                    data: [332.29, 338.25, 334.32, 339.95, 338.00],
+                    shares: 70.6559, price: 338.00, change: -0.07,
                     name: 'Alphabet Inc.',
-                    marketCap: '$4.09T', pe: '33.43', eps: '$10.11',
-                    weekHigh: '$342.29', weekLow: '$140.53', avgVolume: '35.3M',
-                    technical: {
-                        trend: 'Bullish',
-                        rsi: 55,
-                        support: '$332.29',
-                        resistance: '$342.29',
-                        sma50: '$315.80',
-                        sma200: '$285.20',
-                        signal: 'Strong uptrend—buy pullbacks to $332'
-                    },
-                    sentiment: {
-                        rating: 'Buy',
-                        buy: 38, hold: 15, sell: 2,
-                        avgTarget: '$344.47',
-                        highTarget: '$400.00',
-                        lowTarget: '$280.00',
-                        summary: 'Strong momentum with 68.93% 1-year return. Waymo $16B funding at $110B valuation major positive. Earnings Feb 4 key catalyst. Apple-Google AI partnership reduces risk.'
-                    },
+                    data: [332.29, 338.25, 334.32, 339.95, 338.00],
+                    marketCap: '$4.09T', pe: '33.43', eps: '$10.11', weekHigh: '$342.29', weekLow: '$140.53', avgVolume: '35.3M',
+                    technical: { trend: 'Bullish', rsi: 55, support: '$332.29', resistance: '$342.29', sma50: '$315.80', sma200: '$285.20', signal: 'Strong uptrend—buy pullbacks to $332' },
+                    sentiment: { rating: 'Buy', buy: 38, hold: 15, sell: 2, avgTarget: '$344.47', highTarget: '$400.00', lowTarget: '$280.00', summary: 'Waymo $16B funding at $110B valuation. Earnings Feb 4 key catalyst. 68.93% 1-year return.' },
                     news: [
                         { headline: 'Waymo reportedly raising $16B at $110B valuation', source: 'Yahoo Finance', time: '3 days ago' },
-                        { headline: 'Project Genie gaining traction in gaming industry', source: 'The Verge', time: '5 days ago' },
-                        { headline: 'Earnings due Feb 4—YouTube and Cloud growth in focus', source: 'Reuters', time: '2 days ago' }
+                        { headline: 'Project Genie gaining traction in gaming', source: 'The Verge', time: '5 days ago' },
+                        { headline: 'Earnings due Feb 4—YouTube and Cloud in focus', source: 'Reuters', time: '2 days ago' }
                     ],
-                    sources: [
-                        { name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/GOOGL' },
-                        { name: 'Reuters', url: 'https://www.reuters.com/technology/google/' },
-                        { name: 'The Verge', url: 'https://www.theverge.com/google' }
-                    ]
+                    sources: [{ name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/GOOGL' }, { name: 'Reuters', url: 'https://www.reuters.com/technology/google/' }]
+                },
+                'TSLA': { 
+                    shares: 45.7073, price: 430.41, change: 3.32,
+                    name: 'Tesla Inc.',
+                    data: [398.20, 416.57, 417.89, 425.58, 430.41],
+                    marketCap: '$1.62T', pe: '398.53', eps: '$1.08', weekHigh: '$498.83', weekLow: '$214.25', avgVolume: '74.4M',
+                    technical: { trend: 'Volatile/Bullish', rsi: 62, support: '$416.57', resistance: '$439.88', sma50: '$385.20', sma200: '$312.40', signal: 'Momentum strong, watch for pullbacks to $416' },
+                    sentiment: { rating: 'Hold', buy: 18, hold: 22, sell: 8, avgTarget: '$418.89', highTarget: '$550.00', lowTarget: '$85.00', summary: '$20B spending plan signals pivot to AI/robotaxi. Q4 beat but annual revenue dropped 3%—first ever decline. $2B xAI investment.' },
+                    news: [
+                        { headline: 'Tesla invests $2B in Musk\'s xAI, Cybercab on track', source: 'Reuters', time: '4 days ago' },
+                        { headline: 'Q4 beats but annual revenue drops 3%', source: 'CNBC', time: '3 days ago' },
+                        { headline: 'Model S and X production ending within months', source: 'NY Times', time: '3 days ago' }
+                    ],
+                    sources: [{ name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/TSLA' }, { name: 'Reuters', url: 'https://www.reuters.com/business/autos-transportation/tesla/' }]
+                },
+                'META': { 
+                    shares: 21.0519, price: 672.97, change: 0.09,
+                    name: 'Meta Platforms Inc.',
+                    data: [664.66, 672.36, 674.65, 676.82, 672.97],
+                    marketCap: '$1.70T', pe: '29.76', eps: '$22.61', weekHigh: '$796.25', weekLow: '$479.80', avgVolume: '19.3M',
+                    technical: { trend: 'Neutral', rsi: 48, support: '$664.66', resistance: '$696.82', sma50: '$685.20', sma200: '$612.50', signal: 'Wait for earnings clarity before adding' },
+                    sentiment: { rating: 'Buy', buy: 45, hold: 10, sell: 2, avgTarget: '$832.78', highTarget: '$1,117.00', lowTarget: '$685.00', summary: 'Strong fundamentals but AI spending concerns. Q4 earnings critical.' },
+                    news: [
+                        { headline: 'Meta Q4 earnings preview: AI spending scrutiny', source: 'Yahoo Finance', time: '2 days ago' },
+                        { headline: 'Corning-Meta undersea cable deal announced', source: 'Yahoo Finance', time: '3 days ago' },
+                        { headline: 'Analysts see 24% upside despite concerns', source: 'Seeking Alpha', time: '1 week ago' }
+                    ],
+                    sources: [{ name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/META' }, { name: 'Reuters', url: 'https://www.reuters.com/technology/meta/' }]
                 },
                 'AMZN': { 
-                    price: 244.68, change: 2.63, 
-                    data: [238.08, 238.42, 239.68, 242.50, 244.68],
+                    shares: 60.3272, price: 244.68, change: 2.63,
                     name: 'Amazon.com Inc.',
-                    marketCap: '$2.62T', pe: '34.61', eps: '$7.07',
-                    weekHigh: '$258.60', weekLow: '$161.38', avgVolume: '44.6M',
-                    technical: {
-                        trend: 'Bullish',
-                        rsi: 58,
-                        support: '$238.08',
-                        resistance: '$258.60',
-                        sma50: '$235.40',
-                        sma200: '$208.90',
-                        signal: 'Breakout potential—watch $258 for new highs'
-                    },
-                    sentiment: {
-                        rating: 'Overweight',
-                        buy: 48, hold: 8, sell: 1,
-                        avgTarget: '$296.06',
-                        highTarget: '$340.00',
-                        lowTarget: '$200.00',
-                        summary: 'Restructuring underway with 16K job cuts. Fresh/Go stores closing to focus on delivery. AWS AgentCore launch targets enterprise AI. Earnings Feb 5.'
-                    },
+                    data: [238.08, 238.42, 239.68, 242.50, 244.68],
+                    marketCap: '$2.62T', pe: '34.61', eps: '$7.07', weekHigh: '$258.60', weekLow: '$161.38', avgVolume: '44.6M',
+                    technical: { trend: 'Bullish', rsi: 58, support: '$238.08', resistance: '$258.60', sma50: '$235.40', sma200: '$208.90', signal: 'Breakout potential—watch $258 for new highs' },
+                    sentiment: { rating: 'Overweight', buy: 48, hold: 8, sell: 1, avgTarget: '$296.06', highTarget: '$340.00', lowTarget: '$200.00', summary: 'Restructuring with 16K job cuts. AWS AgentCore launch targets enterprise AI. Earnings Feb 5.' },
                     news: [
-                        { headline: 'Amazon closing Fresh and Go stores, focusing on delivery', source: 'Yahoo Finance', time: '4 days ago' },
+                        { headline: 'Amazon closing Fresh/Go stores, focus on delivery', source: 'Yahoo Finance', time: '4 days ago' },
                         { headline: '16,000 job cuts as restructuring continues', source: 'Yahoo Finance', time: '3 days ago' },
-                        { headline: 'AWS AgentCore services launching for enterprise AI', source: 'Reuters', time: '1 week ago' }
+                        { headline: 'AWS AgentCore services launching', source: 'Reuters', time: '1 week ago' }
                     ],
-                    sources: [
-                        { name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/AMZN' },
-                        { name: 'Reuters', url: 'https://www.reuters.com/technology/amazon/' },
-                        { name: 'CNBC', url: 'https://www.cnbc.com/quotes/AMZN' }
-                    ]
+                    sources: [{ name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/AMZN' }, { name: 'Reuters', url: 'https://www.reuters.com/technology/amazon/' }]
+                },
+                'AAPL': { 
+                    shares: 55.1933, price: 259.48, change: 0.46,
+                    name: 'Apple Inc.',
+                    data: [252.18, 255.16, 256.20, 258.28, 259.48],
+                    marketCap: '$3.81T', pe: '32.89', eps: '$7.89', weekHigh: '$288.62', weekLow: '$169.21', avgVolume: '46.6M',
+                    technical: { trend: 'Bullish', rsi: 58, support: '$252.18', resistance: '$261.90', sma50: '$248.50', sma200: '$225.30', signal: 'Buy on dips near support' },
+                    sentiment: { rating: 'Overweight', buy: 28, hold: 8, sell: 2, avgTarget: '$290.90', highTarget: '$350.00', lowTarget: '$205.00', summary: 'Q1 beat expectations. JPMorgan raised PT to $315. Revenue guidance 13-16% growth.' },
+                    news: [
+                        { headline: 'Apple Q1 beats: Revenue $143.76B, guides 13-16% growth', source: 'CNBC', time: '2 days ago' },
+                        { headline: 'JPMorgan raises price target to $315', source: 'CNBC', time: '1 week ago' },
+                        { headline: 'Apple declares $0.26 dividend, $54B cash flow', source: 'StockTitan', time: '3 days ago' }
+                    ],
+                    sources: [{ name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/AAPL' }, { name: 'CNBC', url: 'https://www.cnbc.com/quotes/AAPL' }]
+                },
+                'MSFT': { 
+                    shares: 25.7869, price: 430.29, change: -0.74,
+                    name: 'Microsoft Corporation',
+                    data: [426.45, 433.50, 439.17, 431.20, 430.29],
+                    marketCap: '$3.20T', pe: '26.96', eps: '$15.96', weekHigh: '$555.45', weekLow: '$344.79', avgVolume: '27.2M',
+                    technical: { trend: 'Bearish short-term', rsi: 42, support: '$426.45', resistance: '$439.47', sma50: '$448.30', sma200: '$425.60', signal: 'Caution—below 50-day MA' },
+                    sentiment: { rating: 'Overweight', buy: 42, hold: 12, sell: 1, avgTarget: '$599.58', highTarget: '$650.00', lowTarget: '$420.00', summary: 'Azure growth 23% but AI capex concerns. Copilot adoption strong. 0.85% dividend yield.' },
+                    news: [
+                        { headline: 'Microsoft Q2: 23% net income growth, Azure concerns', source: 'CNBC', time: '3 days ago' },
+                        { headline: 'Tech sell-off hits Microsoft despite fundamentals', source: 'Yahoo Finance', time: '2 days ago' },
+                        { headline: 'Copilot enterprise adoption exceeds expectations', source: 'Reuters', time: '1 week ago' }
+                    ],
+                    sources: [{ name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/MSFT' }, { name: 'Reuters', url: 'https://www.reuters.com/technology/microsoft/' }]
                 }
             },
-            crypto: [
-                { 
-                    symbol: 'BTC', name: 'Bitcoin', price: 77447, change: -1.75,
+            crypto: {
+                'BTC': { amount: 0.82, price: 77447, change: -1.75, name: 'Bitcoin', value: 63507,
                     technical: { trend: 'Correcting', rsi: 45, support: '$74,000', resistance: '$82,000' },
-                    sentiment: 'Neutral—profit-taking after January rally to $105K. Institutional ETF outflows of $1.2B this week.',
-                    news: [
-                        { headline: 'Bitcoin drops below $80K amid risk-off sentiment', source: 'CoinDesk', time: '1 day ago' },
-                        { headline: 'Spot ETF outflows total $1.2B this week', source: 'Bloomberg', time: '2 days ago' },
-                        { headline: 'January jobs data could influence Fed rate path', source: 'Reuters', time: '1 day ago' }
-                    ],
-                    sources: [{ name: 'CoinDesk', url: 'https://www.coindesk.com/price/bitcoin' }, { name: 'Reuters', url: 'https://www.reuters.com/technology/cryptocurrency/' }]
+                    sentiment: 'Neutral—profit-taking after January rally to $105K. ETF outflows $1.2B this week.',
+                    news: [{ headline: 'Bitcoin drops below $80K amid risk-off', source: 'CoinDesk', time: '1 day ago' }, { headline: 'Spot ETF outflows $1.2B this week', source: 'Bloomberg', time: '2 days ago' }, { headline: 'Fed rate path in focus', source: 'Reuters', time: '1 day ago' }],
+                    sources: [{ name: 'CoinDesk', url: 'https://www.coindesk.com/price/bitcoin' }]
                 },
-                { 
-                    symbol: 'ETH', name: 'Ethereum', price: 2307.59, change: 3.92,
+                'USDC': { amount: 5488.85, price: 1.00, change: 0, name: 'USD Coin', value: 5488.85,
+                    technical: { trend: 'Stable', rsi: 50, support: '$1.00', resistance: '$1.00' },
+                    sentiment: 'Stablecoin—1:1 USD peg. Circle-issued, fully reserved.',
+                    news: [{ headline: 'Circle USDC reserves fully audited', source: 'Circle', time: '1 week ago' }],
+                    sources: [{ name: 'Circle', url: 'https://www.circle.com/usdc' }]
+                },
+                'ETH': { amount: 11.33, price: 2307.59, change: 3.92, name: 'Ethereum', value: 26145,
                     technical: { trend: 'Rebounding', rsi: 48, support: '$2,150', resistance: '$2,500' },
-                    sentiment: 'Cautiously optimistic—bouncing from oversold levels. Layer 2 activity remains strong.',
-                    news: [
-                        { headline: 'Ethereum rebounds 4% as buyers step in at support', source: 'CoinDesk', time: '1 day ago' },
-                        { headline: 'Pectra upgrade scheduled for Q2 2026', source: 'The Block', time: '1 week ago' },
-                        { headline: 'ETH/BTC ratio at multi-year lows raises concerns', source: 'CoinTelegraph', time: '3 days ago' }
-                    ],
-                    sources: [{ name: 'CoinDesk', url: 'https://www.coindesk.com/price/ethereum' }, { name: 'The Block', url: 'https://www.theblock.co/' }]
+                    sentiment: 'Cautiously optimistic—bouncing from oversold. Layer 2 activity strong.',
+                    news: [{ headline: 'Ethereum rebounds 4% at support', source: 'CoinDesk', time: '1 day ago' }, { headline: 'Pectra upgrade Q2 2026', source: 'The Block', time: '1 week ago' }],
+                    sources: [{ name: 'CoinDesk', url: 'https://www.coindesk.com/price/ethereum' }]
                 },
-                { 
-                    symbol: 'GOLD', name: 'Gold /oz', price: 4745.10, change: -11.39,
-                    technical: { trend: 'Crashed', rsi: 28, support: '$4,700', resistance: '$5,000' },
-                    sentiment: 'Bearish short-term—Chinese speculators unwound positions causing flash crash from $5,300+ record.',
-                    news: [
-                        { headline: 'Gold crashes 11% from record $5,300 in dramatic reversal', source: 'Bloomberg', time: '1 day ago' },
-                        { headline: 'Chinese speculators set stage for gold and silver crash', source: 'Bloomberg', time: '5 hours ago' },
-                        { headline: 'Fed jitters reframe Newmont risk/reward profile', source: 'Simply Wall St', time: '6 hours ago' }
-                    ],
-                    sources: [{ name: 'Bloomberg', url: 'https://www.bloomberg.com/markets/commodities' }, { name: 'Kitco', url: 'https://www.kitco.com/gold-price-today-usa/' }]
+                'ADA': { amount: 2800, price: 0.82, change: 2.15, name: 'Cardano', value: 2296,
+                    technical: { trend: 'Recovering', rsi: 42, support: '$0.75', resistance: '$0.90' },
+                    sentiment: 'Mixed—ecosystem growth continues but price lagging BTC.',
+                    news: [{ headline: 'Cardano DeFi TVL reaches new high', source: 'CoinDesk', time: '3 days ago' }],
+                    sources: [{ name: 'CoinDesk', url: 'https://www.coindesk.com/price/cardano' }]
                 },
-                { 
-                    symbol: 'SILVER', name: 'Silver /oz', price: 113.83, change: 7.43,
-                    technical: { trend: 'Rebounding', rsi: 42, support: '$105', resistance: '$116' },
-                    sentiment: 'Mixed—sharp rebound after correction. Industrial demand from solar remains strong.',
-                    news: [
-                        { headline: 'Silver rebounds 7% after sharp correction', source: 'Yahoo Finance', time: '1 day ago' },
-                        { headline: 'Sprott Silver ETF surpasses $1B in assets', source: 'GlobeNewswire', time: '16 min ago' },
-                        { headline: 'Don\'t wait to get in on gold, strategist says', source: 'Yahoo Finance', time: '15 hours ago' }
-                    ],
-                    sources: [{ name: 'Yahoo Finance', url: 'https://finance.yahoo.com/quote/SI=F' }, { name: 'Kitco', url: 'https://www.kitco.com/silver-price-today/' }]
+                'XRP': { amount: 1880, price: 0.52, change: -1.20, name: 'XRP', value: 978,
+                    technical: { trend: 'Neutral', rsi: 46, support: '$0.48', resistance: '$0.58' },
+                    sentiment: 'Waiting on SEC case final resolution. Ripple partnerships expanding.',
+                    news: [{ headline: 'Ripple expands APAC partnerships', source: 'CoinTelegraph', time: '2 days ago' }],
+                    sources: [{ name: 'CoinDesk', url: 'https://www.coindesk.com/price/xrp' }]
+                },
+                'OTHER': { amount: 0, price: 0, change: 0, name: 'Other (15+ coins)', value: 4565,
+                    technical: { trend: 'Mixed', rsi: 50, support: 'Varies', resistance: 'Varies' },
+                    sentiment: 'Small positions in TRX, BNB, XLM, TRUMP, ETHW, DAI, 1INCH, HNT, SHIB, ENJ, etc.',
+                    news: [],
+                    sources: []
                 }
+            },
+            meNews: [
+                { headline: 'Gaza Rafah crossing to reopen Sunday — Israel confirms', summary: 'Critical lifeline for 2.3M residents. Egypt coordinating with Israel, Qatar, UN.', context: 'Closure since May 2025 severely restricted aid. Reopening amid fragile ceasefire talks.', related: [{ headline: 'UN welcomes reopening', source: 'AP' }, { headline: 'Egypt deploys border staff', source: 'Al Jazeera' }], sources: [{ name: 'Reuters', url: 'https://www.reuters.com/world/middle-east/' }] },
+                { headline: 'Syria-Kurds historic integration deal — US hails milestone', summary: 'SDF gradual integration into Syrian state. Ends years of autonomy uncertainty.', context: 'Turkey had opposed Kurdish self-governance. Includes military coordination and shared admin.', related: [{ headline: 'Turkey cautiously welcomes deal', source: 'Anadolu' }], sources: [{ name: 'Reuters', url: 'https://www.reuters.com/world/middle-east/syria/' }] },
+                { headline: 'Iran warns US attack on Khamenei means "all-out war"', summary: 'Armed forces "fingers on trigger." Two US carrier groups in region.', context: 'JCPOA talks collapsed. 83% uranium enrichment near weapons-grade.', related: [{ headline: 'Pentagon confirms carrier deployment', source: 'Defense News' }], sources: [{ name: 'BBC', url: 'https://www.bbc.com/news/world/middle_east' }] },
+                { headline: 'Israel strikes Gaza — 26 killed targeting Hamas commanders', summary: 'IDF targeted senior commanders. Strikes as Rafah prepares to reopen.', context: 'International calls for restraint. Qatar mediators in emergency consultations.', related: [{ headline: 'IDF claims 3 commanders eliminated', source: 'Jerusalem Post' }], sources: [{ name: 'NY Times', url: 'https://www.nytimes.com/2026/01/31/world/middleeast/' }] }
             ],
-            news: [
-                {
-                    headline: 'Gaza\'s Rafah crossing with Egypt to reopen Sunday — Israel confirms',
-                    summary: 'Israel has confirmed the Rafah border crossing between Gaza and Egypt will reopen on Sunday, allowing humanitarian aid and limited civilian movement after months of closure.',
-                    context: 'The crossing is a critical lifeline for Gaza\'s 2.3 million residents. Its closure since May 2025 severely restricted aid flows. Egypt has been coordinating logistics with Israel, Qatar, and the UN. The reopening comes amid fragile ceasefire talks.',
-                    related: [
-                        { headline: 'UN welcomes Rafah reopening as "critical first step"', source: 'AP News' },
-                        { headline: 'Egypt deploys additional border personnel', source: 'Al Jazeera' },
-                        { headline: 'Aid organizations prepare for resumed operations', source: 'Reuters' }
-                    ],
-                    sources: [{ name: 'Reuters', url: 'https://www.reuters.com/world/middle-east/' }, { name: 'AP News', url: 'https://apnews.com/hub/israel-hamas-war' }]
-                },
-                {
-                    headline: 'Syrian government and Kurds agree historic integration deal — US hails milestone',
-                    summary: 'The Syrian government and Kurdish forces (SDF) have reached a landmark agreement for gradual integration. The US State Department called it a "historic milestone" for regional stability.',
-                    context: 'The deal ends years of uncertainty about Kurdish autonomy in northeastern Syria. Turkey had opposed Kurdish self-governance. Integration includes military coordination and shared administration. Fighting in eastern Aleppo had threatened negotiations.',
-                    related: [
-                        { headline: 'Turkey cautiously welcomes Syria-Kurds deal', source: 'Anadolu Agency' },
-                        { headline: 'Kurdish commander urges continued US support', source: 'Times of Israel' },
-                        { headline: 'Russia reduces forces to Tartus naval base', source: 'BBC' }
-                    ],
-                    sources: [{ name: 'Reuters', url: 'https://www.reuters.com/world/middle-east/syria/' }, { name: 'BBC', url: 'https://www.bbc.com/news/world/middle_east' }]
-                },
-                {
-                    headline: 'Iran\'s president warns any US attack on Khamenei would mean "all-out war"',
-                    summary: 'Iran\'s Foreign Minister Araghchi stated armed forces had "fingers on the trigger" to respond to any US strike. President Pezeshkian warned of severe escalation if Supreme Leader targeted.',
-                    context: 'Tensions follow collapse of JCPOA revival talks. Iran\'s uranium enrichment has reached 83% purity—near weapons-grade. The US has two carrier strike groups in the region. Hezbollah may hesitate to act given reconstruction efforts in Lebanon.',
-                    related: [
-                        { headline: 'Pentagon confirms second carrier group deployment', source: 'Defense News' },
-                        { headline: 'IAEA reports 83% uranium enrichment at Fordow', source: 'Reuters' },
-                        { headline: 'Hezbollah focused on reconstruction, unlikely to escalate', source: 'ISW' }
-                    ],
-                    sources: [{ name: 'BBC', url: 'https://www.bbc.com/news/world/middle_east' }, { name: 'Times of Israel', url: 'https://www.timesofisrael.com/' }]
-                },
-                {
-                    headline: 'Israel launches strikes in Gaza — at least 26 killed targeting Hamas commanders',
-                    summary: 'Israeli military conducted strikes in Gaza killing at least 26 people according to local health officials. The IDF stated operations targeted senior Hamas commanders.',
-                    context: 'Strikes come as Rafah crossing prepares to reopen. International community has called for restraint. Turkey, Egypt, and Qatar continue mediation efforts. Civilian casualties remain a major concern for aid organizations.',
-                    related: [
-                        { headline: 'IDF claims elimination of three Hamas battalion commanders', source: 'Jerusalem Post' },
-                        { headline: 'UN calls for protection of civilians', source: 'UN News' },
-                        { headline: 'Qatar mediators in emergency consultations', source: 'Al Jazeera' }
-                    ],
-                    sources: [{ name: 'NY Times', url: 'https://www.nytimes.com/2026/01/31/world/middleeast/israel-strikes-gaza-rafah-reopening.html' }, { name: 'Reuters', url: 'https://www.reuters.com/world/middle-east/' }]
-                }
+            marketNews: [
+                { headline: 'Gold crashes 11% from $5,300 record — Chinese speculators unwind', source: 'Bloomberg' },
+                { headline: 'Tesla invests $2B in xAI, Cybercab production on track', source: 'Reuters' },
+                { headline: 'Apple Q1 beats, guides 13-16% revenue growth', source: 'CNBC' },
+                { headline: 'January jobs data this week could shift Fed rate path', source: 'Yahoo Finance' }
             ]
         };
         
-        const stockOrder = ['AAPL', 'TSLA', 'NVDA', 'META', 'MSFT', 'GOOGL', 'AMZN'];
+        const stockOrder = ['VOO', 'NVDA', 'GOOGL', 'TSLA', 'META', 'AMZN', 'AAPL', 'MSFT'];
+        const cryptoOrder = ['BTC', 'ETH', 'USDC', 'ADA', 'XRP', 'OTHER'];
         
+        // Calculate totals
+        let stocksTotal = DATA.cash;
+        stockOrder.forEach(sym => { stocksTotal += DATA.stocks[sym].shares * DATA.stocks[sym].price; });
+        let cryptoTotal = 0;
+        cryptoOrder.forEach(sym => { cryptoTotal += DATA.crypto[sym].value; });
+        const netWorth = stocksTotal + cryptoTotal;
+        
+        document.getElementById('net-worth').textContent = '$' + (netWorth / 1000).toFixed(0) + 'K';
+        document.getElementById('stocks-total').textContent = '$' + (stocksTotal / 1000).toFixed(0) + 'K';
+        document.getElementById('crypto-total').textContent = '$' + (cryptoTotal / 1000).toFixed(0) + 'K';
+        
+        // Render stocks
+        const stocksList = document.getElementById('stocks-list');
+        stockOrder.forEach((sym, idx) => {
+            const s = DATA.stocks[sym];
+            const value = s.shares * s.price;
+            const isUp = s.change >= 0;
+            const row = document.createElement('div');
+            row.className = 'stock-row';
+            row.onclick = () => openModal('stock', sym);
+            row.innerHTML = `
+                <div><div class="stock-symbol">${sym}</div><div class="stock-shares">${s.shares.toFixed(2)} shares</div></div>
+                <div class="stock-value">$${(value/1000).toFixed(1)}K</div>
+                <div class="stock-change ${isUp ? 'up' : 'down'}">${isUp ? '↑' : '↓'} ${Math.abs(s.change).toFixed(2)}%</div>
+                <div class="stock-spark"><canvas id="spark-${sym}"></canvas></div>
+            `;
+            stocksList.appendChild(row);
+            setTimeout(() => {
+                const ctx = document.getElementById(`spark-${sym}`);
+                if (ctx) new Chart(ctx.getContext('2d'), { type: 'line', data: { labels: s.data.map((_,i)=>i), datasets: [{ data: s.data, borderColor: isUp ? '#4ade80' : '#f87171', backgroundColor: 'transparent', tension: 0.4, borderWidth: 2, pointRadius: 0 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } } });
+            }, idx * 40);
+        });
+        
+        // Render crypto
+        const cryptoGrid = document.getElementById('crypto-grid');
+        cryptoOrder.forEach(sym => {
+            const c = DATA.crypto[sym];
+            const isUp = c.change >= 0;
+            const item = document.createElement('div');
+            item.className = 'crypto-item';
+            item.onclick = () => openModal('crypto', sym);
+            item.innerHTML = `
+                <div class="name">${sym}</div>
+                <div class="sub">${c.name}</div>
+                <div class="row">
+                    <span class="price">$${(c.value/1000).toFixed(1)}K</span>
+                    <span class="change ${isUp ? 'green' : 'red'}">${isUp ? '↑' : '↓'} ${Math.abs(c.change).toFixed(1)}%</span>
+                </div>
+            `;
+            cryptoGrid.appendChild(item);
+        });
+        
+        // Render ME news
+        const newsList = document.getElementById('news-list');
+        DATA.meNews.forEach((n, idx) => {
+            const item = document.createElement('div');
+            item.className = 'news-item';
+            item.onclick = () => openModal('menews', idx);
+            item.innerHTML = `<div class="news-dot"></div><div class="news-text">${n.headline}</div>`;
+            newsList.appendChild(item);
+        });
+        
+        // Render market news
+        const marketNewsList = document.getElementById('market-news');
+        DATA.marketNews.forEach(n => {
+            const item = document.createElement('div');
+            item.className = 'news-item';
+            item.innerHTML = `<div class="news-dot" style="background:var(--accent-cyan)"></div><div class="news-text">${n.headline} <span style="color:var(--accent-cyan);font-size:0.7rem">${n.source}</span></div>`;
+            marketNewsList.appendChild(item);
+        });
+        
+        // Modal
         function openModal(type, id) {
             const overlay = document.getElementById('modal-overlay');
             const title = document.getElementById('modal-title');
@@ -802,27 +601,25 @@
             
             if (type === 'stock') {
                 const d = DATA.stocks[id];
-                const totalBuy = d.sentiment.buy + d.sentiment.hold + d.sentiment.sell;
+                const value = d.shares * d.price;
+                const totalBuy = d.sentiment.buy + d.sentiment.hold + d.sentiment.sell || 1;
                 const buyPct = (d.sentiment.buy / totalBuy * 100).toFixed(0);
                 const holdPct = (d.sentiment.hold / totalBuy * 100).toFixed(0);
                 const sellPct = (d.sentiment.sell / totalBuy * 100).toFixed(0);
                 
                 title.textContent = `${id} — ${d.name}`;
-                subtitle.textContent = `$${d.price.toFixed(2)} · ${d.change >= 0 ? '+' : ''}${d.change.toFixed(2)}% today`;
+                subtitle.textContent = `${d.shares.toFixed(2)} shares · $${(value/1000).toFixed(1)}K value · ${d.change >= 0 ? '+' : ''}${d.change.toFixed(2)}% today`;
                 
                 body.innerHTML = `
-                    <div class="modal-section">
-                        <h4>Key Metrics</h4>
+                    <div class="modal-section"><h4>Key Metrics</h4>
                         <div class="modal-stats">
-                            <div class="modal-stat"><div class="label">Market Cap</div><div class="value">${d.marketCap}</div></div>
-                            <div class="modal-stat"><div class="label">P/E Ratio</div><div class="value">${d.pe}</div></div>
-                            <div class="modal-stat"><div class="label">EPS (TTM)</div><div class="value">${d.eps}</div></div>
+                            <div class="modal-stat"><div class="label">Mkt Cap</div><div class="value">${d.marketCap}</div></div>
+                            <div class="modal-stat"><div class="label">P/E</div><div class="value">${d.pe}</div></div>
+                            <div class="modal-stat"><div class="label">${d.type === 'ETF' ? 'Expense' : 'EPS'}</div><div class="value">${d.type === 'ETF' ? d.expenseRatio : d.eps}</div></div>
                             <div class="modal-stat"><div class="label">52W High</div><div class="value">${d.weekHigh}</div></div>
                         </div>
                     </div>
-                    
-                    <div class="modal-section">
-                        <h4>Technical Analysis</h4>
+                    <div class="modal-section"><h4>Technical Analysis</h4>
                         <p><strong>Trend:</strong> ${d.technical.trend} · <strong>RSI:</strong> ${d.technical.rsi} · <strong>Signal:</strong> ${d.technical.signal}</p>
                         <div class="tech-levels">
                             <div class="tech-level"><span class="label">Support</span><span class="value">${d.technical.support}</span></div>
@@ -831,188 +628,42 @@
                             <div class="tech-level"><span class="label">200-day MA</span><span class="value">${d.technical.sma200}</span></div>
                         </div>
                     </div>
-                    
-                    <div class="modal-section">
-                        <h4>Sentiment Analysis</h4>
-                        <p><strong>Rating:</strong> ${d.sentiment.rating} · <strong>Price Targets:</strong> Low ${d.sentiment.lowTarget} → Avg ${d.sentiment.avgTarget} → High ${d.sentiment.highTarget}</p>
-                        <div class="sentiment-bar">
-                            <div class="bar buy" style="flex: ${buyPct}"></div>
-                            <div class="bar hold" style="flex: ${holdPct}"></div>
-                            <div class="bar sell" style="flex: ${sellPct}"></div>
-                        </div>
-                        <div class="sentiment-labels">
-                            <span>Buy ${d.sentiment.buy} (${buyPct}%)</span>
-                            <span>Hold ${d.sentiment.hold} (${holdPct}%)</span>
-                            <span>Sell ${d.sentiment.sell} (${sellPct}%)</span>
-                        </div>
-                        <p style="margin-top: 12px;">${d.sentiment.summary}</p>
+                    <div class="modal-section"><h4>Sentiment Analysis</h4>
+                        <p><strong>Rating:</strong> ${d.sentiment.rating} · <strong>Targets:</strong> ${d.sentiment.lowTarget} → ${d.sentiment.avgTarget} → ${d.sentiment.highTarget}</p>
+                        ${d.sentiment.buy > 0 ? `<div class="sentiment-bar"><div class="bar buy" style="flex:${buyPct}"></div><div class="bar hold" style="flex:${holdPct}"></div><div class="bar sell" style="flex:${sellPct}"></div></div><div class="sentiment-labels"><span>Buy ${buyPct}%</span><span>Hold ${holdPct}%</span><span>Sell ${sellPct}%</span></div>` : ''}
+                        <p style="margin-top:10px">${d.sentiment.summary}</p>
                     </div>
-                    
-                    <div class="modal-section">
-                        <h4>Top 3 Recent News</h4>
-                        ${d.news.map(n => `<div class="news-card"><div class="headline">${n.headline}</div><div class="meta"><span class="source">${n.source}</span><span>${n.time}</span></div></div>`).join('')}
-                    </div>
+                    <div class="modal-section"><h4>Top 3 News</h4>${d.news.map(n => `<div class="news-card"><div class="headline">${n.headline}</div><div class="meta"><span class="source">${n.source}</span><span>${n.time}</span></div></div>`).join('')}</div>
                 `;
-                
                 sources.innerHTML = `<h4>Sources</h4>${d.sources.map(s => `<a href="${s.url}" target="_blank">${s.name} ↗</a>`).join('')}`;
-            } 
-            else if (type === 'crypto') {
-                const d = DATA.crypto.find(c => c.symbol === id);
-                const priceStr = d.price >= 1000 ? '$' + d.price.toLocaleString() : '$' + d.price.toFixed(2);
-                
-                title.textContent = `${d.symbol} — ${d.name}`;
-                subtitle.textContent = `${priceStr} · ${d.change >= 0 ? '+' : ''}${d.change.toFixed(2)}% 24h`;
-                
+            } else if (type === 'crypto') {
+                const d = DATA.crypto[id];
+                title.textContent = `${id} — ${d.name}`;
+                subtitle.textContent = `$${d.value.toLocaleString()} value · ${d.change >= 0 ? '+' : ''}${d.change.toFixed(2)}%`;
                 body.innerHTML = `
-                    <div class="modal-section">
-                        <h4>Technical Overview</h4>
-                        <p><strong>Trend:</strong> ${d.technical.trend} · <strong>RSI:</strong> ${d.technical.rsi}</p>
-                        <div class="tech-levels">
-                            <div class="tech-level"><span class="label">Support</span><span class="value">${d.technical.support}</span></div>
-                            <div class="tech-level"><span class="label">Resistance</span><span class="value">${d.technical.resistance}</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-section">
-                        <h4>Sentiment</h4>
-                        <p>${d.sentiment}</p>
-                    </div>
-                    
-                    <div class="modal-section">
-                        <h4>Top 3 Recent News</h4>
-                        ${d.news.map(n => `<div class="news-card"><div class="headline">${n.headline}</div><div class="meta"><span class="source">${n.source}</span><span>${n.time}</span></div></div>`).join('')}
-                    </div>
+                    <div class="modal-section"><h4>Technical</h4><p><strong>Trend:</strong> ${d.technical.trend} · <strong>RSI:</strong> ${d.technical.rsi} · <strong>Support:</strong> ${d.technical.support} · <strong>Resistance:</strong> ${d.technical.resistance}</p></div>
+                    <div class="modal-section"><h4>Sentiment</h4><p>${d.sentiment}</p></div>
+                    ${d.news.length ? `<div class="modal-section"><h4>Recent News</h4>${d.news.map(n => `<div class="news-card"><div class="headline">${n.headline}</div><div class="meta"><span class="source">${n.source}</span><span>${n.time}</span></div></div>`).join('')}</div>` : ''}
                 `;
-                
-                sources.innerHTML = `<h4>Sources</h4>${d.sources.map(s => `<a href="${s.url}" target="_blank">${s.name} ↗</a>`).join('')}`;
-            }
-            else if (type === 'news') {
-                const d = DATA.news[id];
-                
+                sources.innerHTML = d.sources.length ? `<h4>Sources</h4>${d.sources.map(s => `<a href="${s.url}" target="_blank">${s.name} ↗</a>`).join('')}` : '';
+            } else if (type === 'menews') {
+                const d = DATA.meNews[id];
                 title.textContent = 'Middle East Analysis';
                 subtitle.textContent = 'Deep dive';
-                
                 body.innerHTML = `
-                    <div class="modal-section">
-                        <h4>Headline</h4>
-                        <p><strong style="color: var(--text-primary); font-size: 1.05rem;">${d.headline}</strong></p>
-                    </div>
-                    
-                    <div class="modal-section">
-                        <h4>Summary</h4>
-                        <p>${d.summary}</p>
-                    </div>
-                    
-                    <div class="modal-section">
-                        <h4>Background & Context</h4>
-                        <p>${d.context}</p>
-                    </div>
-                    
-                    <div class="modal-section">
-                        <h4>Related Coverage</h4>
-                        ${d.related.map(r => `<div class="news-card"><div class="headline">${r.headline}</div><div class="meta"><span class="source">${r.source}</span></div></div>`).join('')}
-                    </div>
+                    <div class="modal-section"><h4>Headline</h4><p style="color:var(--text-primary);font-size:1.05rem;font-weight:500">${d.headline}</p></div>
+                    <div class="modal-section"><h4>Summary</h4><p>${d.summary}</p></div>
+                    <div class="modal-section"><h4>Context</h4><p>${d.context}</p></div>
+                    <div class="modal-section"><h4>Related</h4>${d.related.map(r => `<div class="news-card"><div class="headline">${r.headline}</div><div class="meta"><span class="source">${r.source}</span></div></div>`).join('')}</div>
                 `;
-                
                 sources.innerHTML = `<h4>Sources</h4>${d.sources.map(s => `<a href="${s.url}" target="_blank">${s.name} ↗</a>`).join('')}`;
             }
-            
             overlay.classList.add('active');
         }
         
-        function closeModal() {
-            document.getElementById('modal-overlay').classList.remove('active');
-        }
-        
-        document.getElementById('modal-overlay').addEventListener('click', function(e) {
-            if (e.target === this) closeModal();
-        });
+        function closeModal() { document.getElementById('modal-overlay').classList.remove('active'); }
+        document.getElementById('modal-overlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
         document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeModal(); });
-        
-        // Calculate totals
-        let totalValue = 0;
-        stockOrder.forEach(sym => { totalValue += DATA.positions[sym] * DATA.stocks[sym].price; });
-        document.getElementById('total-value').textContent = '$' + totalValue.toLocaleString(undefined, { maximumFractionDigits: 0 });
-        
-        // Render stocks
-        const stocksList = document.getElementById('stocks-list');
-        stockOrder.forEach((sym, idx) => {
-            const stock = DATA.stocks[sym];
-            const shares = DATA.positions[sym];
-            const value = shares * stock.price;
-            const isUp = stock.change >= 0;
-            
-            const row = document.createElement('div');
-            row.className = 'stock-row';
-            row.onclick = () => openModal('stock', sym);
-            row.innerHTML = `
-                <div><div class="stock-symbol">${sym}</div></div>
-                <div class="stock-details">${shares.toFixed(4)} shares · $${value.toLocaleString(undefined, {maximumFractionDigits: 0})} value</div>
-                <div class="stock-price">$${stock.price.toFixed(2)}</div>
-                <div class="stock-change ${isUp ? 'up' : 'down'}">${isUp ? '↑' : '↓'} ${Math.abs(stock.change).toFixed(2)}%</div>
-                <div class="stock-spark"><canvas id="spark-${sym}"></canvas></div>
-                <button class="learn-more">More</button>
-            `;
-            stocksList.appendChild(row);
-            
-            setTimeout(() => {
-                const ctx = document.getElementById(`spark-${sym}`);
-                if (ctx) {
-                    new Chart(ctx.getContext('2d'), {
-                        type: 'line',
-                        data: { labels: stock.data.map((_, i) => i), datasets: [{ data: stock.data, borderColor: isUp ? '#4ade80' : '#f87171', backgroundColor: 'transparent', tension: 0.4, borderWidth: 2, pointRadius: 0 }] },
-                        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { x: { display: false }, y: { display: false } } }
-                    });
-                }
-            }, idx * 50);
-        });
-        
-        // Summary
-        const winners = stockOrder.filter(s => DATA.stocks[s].change > 0).length;
-        const losers = stockOrder.filter(s => DATA.stocks[s].change < 0).length;
-        const topGainer = stockOrder.reduce((a, b) => DATA.stocks[a].change > DATA.stocks[b].change ? a : b);
-        const topLoser = stockOrder.reduce((a, b) => DATA.stocks[a].change < DATA.stocks[b].change ? a : b);
-        
-        document.getElementById('summary-grid').innerHTML = `
-            <div class="summary-item"><div class="label">Winners</div><div class="value green">${winners}</div></div>
-            <div class="summary-item"><div class="label">Losers</div><div class="value red">${losers}</div></div>
-            <div class="summary-item"><div class="label">Top Gainer</div><div class="ticker green">${topGainer}</div><div class="pct green">+${DATA.stocks[topGainer].change.toFixed(2)}%</div></div>
-            <div class="summary-item"><div class="label">Top Loser</div><div class="ticker red">${topLoser}</div><div class="pct red">${DATA.stocks[topLoser].change.toFixed(2)}%</div></div>
-        `;
-        
-        // Crypto
-        const cryptoGrid = document.getElementById('crypto-grid');
-        DATA.crypto.forEach(c => {
-            const isUp = c.change >= 0;
-            const priceStr = c.price >= 1000 ? '$' + c.price.toLocaleString() : '$' + c.price.toFixed(2);
-            const item = document.createElement('div');
-            item.className = 'crypto-item';
-            item.onclick = () => openModal('crypto', c.symbol);
-            item.innerHTML = `
-                <button class="learn-more">More</button>
-                <div class="name">${c.symbol}</div>
-                <div class="sub">${c.name}</div>
-                <div class="price">${priceStr}</div>
-                <div class="change ${isUp ? 'green' : 'red'}">${isUp ? '↑' : '↓'} ${Math.abs(c.change).toFixed(2)}%</div>
-            `;
-            cryptoGrid.appendChild(item);
-        });
-        
-        // News
-        const newsList = document.getElementById('news-list');
-        DATA.news.forEach((item, idx) => {
-            const newsItem = document.createElement('div');
-            newsItem.className = 'news-item';
-            newsItem.onclick = () => openModal('news', idx);
-            newsItem.innerHTML = `
-                <div class="news-dot"></div>
-                <div class="news-content">
-                    <div class="news-text">${item.headline}</div>
-                    <button class="learn-more">Learn more</button>
-                </div>
-            `;
-            newsList.appendChild(newsItem);
-        });
     </script>
 </body>
 </html>
