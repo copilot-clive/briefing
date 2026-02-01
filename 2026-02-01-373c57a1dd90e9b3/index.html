@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Briefing | Bernhard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-main: #e4e9e6;
+            --bg-card: #ffffff;
+            --bg-card-alt: #f5f7f6;
+            --bg-accent: #2d3436;
+            --text-primary: #1a1a2e;
+            --text-secondary: #636e72;
+            --text-muted: #b2bec3;
+            --accent-green: #00b894;
+            --accent-red: #ff6b6b;
+            --accent-blue: #0984e3;
+            --accent-orange: #fdcb6e;
+            --accent-purple: #a29bfe;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+            --radius: 24px;
+            --radius-sm: 16px;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 24px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 32px;
+            padding: 0 8px;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow);
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-green);
+        }
+        
+        .greeting {
+            margin-top: 8px;
+        }
+        
+        .greeting h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+        
+        .greeting p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            margin-top: 4px;
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-orange), var(--accent-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: var(--shadow);
+        }
+        
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            grid-auto-rows: minmax(100px, auto);
+            gap: 20px;
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        
+        .card-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .card-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+        }
+        
+        /* Portfolio Value Card */
+        .portfolio-value {
+            grid-column: span 4;
+            grid-row: span 2;
+            background: linear-gradient(135deg, #2d3436 0%, #636e72 100%);
+            color: white;
+        }
+        
+        .portfolio-value .card-title {
+            color: rgba(255,255,255,0.7);
+        }
+        
+        .portfolio-value .value {
+            font-size: 3rem;
+            font-weight: 800;
+            margin: 16px 0;
+        }
+        
+        .portfolio-value .change {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.15);
+            border-radius: 50px;
+            font-size: 0.9rem;
+        }
+        
+        .portfolio-value .chart-container {
+            margin-top: 20px;
+            height: 80px;
+        }
+        
+        /* Stock Cards */
+        .stocks-grid {
+            grid-column: span 8;
+            grid-row: span 2;
+        }
+        
+        .stocks-inner {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            height: 100%;
+        }
+        
+        .stock-card {
+            background: var(--bg-card-alt);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+        }
+        
+        .stock-card:hover {
+            background: var(--bg-card);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        
+        .stock-symbol {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        
+        .stock-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 8px 0 4px;
+        }
+        
+        .stock-change {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 8px;
+            border-radius: 8px;
+            display: inline-block;
+            width: fit-content;
+        }
+        
+        .stock-change.up {
+            background: rgba(0, 184, 148, 0.15);
+            color: var(--accent-green);
+        }
+        
+        .stock-change.down {
+            background: rgba(255, 107, 107, 0.15);
+            color: var(--accent-red);
+        }
+        
+        .stock-spark {
+            height: 30px;
+            margin-top: 8px;
+        }
+        
+        /* Crypto Card */
+        .crypto-card {
+            grid-column: span 3;
+            grid-row: span 2;
+        }
+        
+        .crypto-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .crypto-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-card-alt);
+            border-radius: var(--radius-sm);
+        }
+        
+        .crypto-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        
+        .crypto-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .crypto-price {
+            text-align: right;
+        }
+        
+        .crypto-value {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+        
+        /* Summary Card */
+        .summary-card {
+            grid-column: span 3;
+            grid-row: span 2;
+        }
+        
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .summary-item {
+            background: var(--bg-card-alt);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+        }
+        
+        .summary-item.full {
+            grid-column: span 2;
+        }
+        
+        .summary-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .summary-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 4px;
+        }
+        
+        .summary-value.green { color: var(--accent-green); }
+        .summary-value.red { color: var(--accent-red); }
+        
+        /* News Card */
+        .news-card {
+            grid-column: span 6;
+            grid-row: span 2;
+        }
+        
+        .news-card .card-icon {
+            background: rgba(255, 107, 107, 0.15);
+        }
+        
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .news-item {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            background: var(--bg-card-alt);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+        
+        .news-item:hover {
+            background: #eef1f0;
+        }
+        
+        .news-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-orange);
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+        
+        .news-text {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+        
+        /* Motivation Card */
+        .motivation-card {
+            grid-column: span 6;
+            grid-row: span 2;
+            background: linear-gradient(135deg, #a29bfe 0%, #6c5ce7 100%);
+            color: white;
+        }
+        
+        .motivation-card .card-title {
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .motivation-card .card-icon {
+            background: rgba(255,255,255,0.2);
+        }
+        
+        .quote-text {
+            font-size: 1.15rem;
+            font-weight: 500;
+            line-height: 1.7;
+            font-style: italic;
+            margin: 16px 0;
+        }
+        
+        .quote-author {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 32px 0 16px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .footer-crab {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .stocks-inner {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .portfolio-value, .stocks-grid, .crypto-card, .summary-card, .news-card, .motivation-card {
+                grid-column: span 6;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .portfolio-value, .stocks-grid, .crypto-card, .summary-card, .news-card, .motivation-card {
+                grid-column: span 12;
+            }
+            .greeting h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-left">
+                <div class="status-pill">
+                    <span class="status-dot"></span>
+                    <span>Live</span>
+                    <span>•</span>
+                    <span id="current-time">--:--</span>
+                </div>
+                <div class="greeting">
+                    <h1>Hi Bernhard,<br>Have a great day</h1>
+                    <p id="current-date"></p>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="avatar">🦀</div>
+            </div>
+        </header>
+        
+        <div class="dashboard">
+            <!-- Portfolio Value -->
+            <div class="card portfolio-value">
+                <div class="card-header">
+                    <span class="card-title">Portfolio Value</span>
+                    <div class="card-icon">📈</div>
+                </div>
+                <div class="value" id="portfolio-value">$0</div>
+                <div class="change" id="portfolio-change">
+                    <span>↑</span>
+                    <span>+0.00%</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="portfolio-chart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Stocks Grid -->
+            <div class="card stocks-grid">
+                <div class="card-header">
+                    <span class="card-title">Magnificent 7</span>
+                    <div class="card-icon" style="background: rgba(0, 184, 148, 0.15);">💹</div>
+                </div>
+                <div class="stocks-inner" id="stocks-grid"></div>
+            </div>
+            
+            <!-- Crypto -->
+            <div class="card crypto-card">
+                <div class="card-header">
+                    <span class="card-title">Crypto & Commodities</span>
+                    <div class="card-icon" style="background: rgba(253, 203, 110, 0.15);">🪙</div>
+                </div>
+                <div class="crypto-list" id="crypto-list"></div>
+            </div>
+            
+            <!-- Summary -->
+            <div class="card summary-card">
+                <div class="card-header">
+                    <span class="card-title">Quick Stats</span>
+                    <div class="card-icon" style="background: rgba(9, 132, 227, 0.15);">📊</div>
+                </div>
+                <div class="summary-grid" id="summary-grid"></div>
+            </div>
+            
+            <!-- News -->
+            <div class="card news-card">
+                <div class="card-header">
+                    <span class="card-title">Middle East Briefing</span>
+                    <div class="card-icon" style="background: rgba(255, 107, 107, 0.15);">🌍</div>
+                </div>
+                <div class="news-list" id="news-list"></div>
+            </div>
+            
+            <!-- Motivation -->
+            <div class="card motivation-card">
+                <div class="card-header">
+                    <span class="card-title">Daily Motivation</span>
+                    <div class="card-icon">💪</div>
+                </div>
+                <div id="motivation-content"></div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <div class="footer-crab">🦀</div>
+            <p>Generated by Clive · Updated <span id="update-time"></span></p>
+        </footer>
+    </div>
+    
+    <script>
+        // Data
+        const DATA = {
+            positions: {
+                'AAPL': 55.1933, 'AMZN': 60.3272, 'GOOGL': 70.6559,
+                'META': 21.0519, 'MSFT': 25.7869, 'NVDA': 610.844, 'TSLA': 45.7073
+            },
+            stocks: {
+                'AAPL': { price: 259.48, change: 0.46, data: [255, 256, 257, 256, 258, 259, 258, 259.48] },
+                'AMZN': { price: 239.30, change: -1.01, data: [242, 241, 240, 241, 239, 238, 239, 239.30] },
+                'GOOGL': { price: 338.00, change: -0.07, data: [338, 337, 338, 339, 338, 337, 338, 338.00] },
+                'META': { price: 716.50, change: -2.95, data: [738, 735, 730, 725, 720, 718, 716, 716.50] },
+                'MSFT': { price: 430.29, change: -0.74, data: [433, 432, 431, 430, 431, 430, 430, 430.29] },
+                'NVDA': { price: 191.13, change: -0.72, data: [193, 192, 191, 192, 191, 190, 191, 191.13] },
+                'TSLA': { price: 430.41, change: 3.32, data: [416, 418, 420, 422, 425, 428, 430, 430.41] }
+            },
+            crypto: {
+                'BTC': { price: 78771, change: -6.08, label: 'Bitcoin' },
+                'ETH': { price: 2441, change: -9.43, label: 'Ethereum' },
+                'GOLD': { price: 5067.50, change: -5.37, label: 'Gold /oz' },
+                'SILVER': { price: 98.50, change: -13.92, label: 'Silver /oz' }
+            },
+            news: [
+                "US-Iran tensions escalating — Iran announced live-fire naval drills near US warships",
+                "Gaza ceasefire efforts continue with pressure from Turkey, Egypt, and Qatar",
+                "Assad regime has fallen in Syria; regional powers reassessing positions",
+                "Oil prices volatile amid Strait of Hormuz concerns"
+            ],
+            motivation: {
+                quote: "Success is not final, failure is not fatal: it is the courage to continue that counts. Every day you show up, you lay another brick.",
+                author: "Winston Churchill"
+            }
+        };
+        
+        // Time
+        const now = new Date();
+        document.getElementById('current-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+        document.getElementById('update-time').textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+        
+        // Portfolio Value
+        const totalValue = Object.entries(DATA.stocks).reduce((sum, [symbol, data]) => {
+            return sum + (DATA.positions[symbol] || 0) * data.price;
+        }, 0);
+        document.getElementById('portfolio-value').textContent = '$' + totalValue.toLocaleString(undefined, {maximumFractionDigits: 0});
+        
+        // Stocks
+        const stocksGrid = document.getElementById('stocks-grid');
+        const stockOrder = ['AAPL', 'TSLA', 'NVDA', 'META', 'MSFT', 'GOOGL', 'AMZN'];
+        
+        stockOrder.forEach((symbol, idx) => {
+            const stock = DATA.stocks[symbol];
+            const isUp = stock.change >= 0;
+            
+            const card = document.createElement('div');
+            card.className = 'stock-card';
+            card.innerHTML = `
+                <div>
+                    <div class="stock-symbol">${symbol}</div>
+                    <div class="stock-price">$${stock.price.toFixed(2)}</div>
+                    <span class="stock-change ${isUp ? 'up' : 'down'}">${isUp ? '↑' : '↓'} ${Math.abs(stock.change).toFixed(2)}%</span>
+                </div>
+                <div class="stock-spark"><canvas id="spark-${symbol}"></canvas></div>
+            `;
+            stocksGrid.appendChild(card);
+            
+            // Mini sparkline
+            setTimeout(() => {
+                const ctx = document.getElementById(`spark-${symbol}`).getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: stock.data.map((_, i) => i),
+                        datasets: [{
+                            data: stock.data,
+                            borderColor: isUp ? '#00b894' : '#ff6b6b',
+                            backgroundColor: 'transparent',
+                            tension: 0.4,
+                            borderWidth: 2,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: { x: { display: false }, y: { display: false } }
+                    }
+                });
+            }, idx * 30);
+        });
+        
+        // Portfolio chart
+        const portfolioCtx = document.getElementById('portfolio-chart').getContext('2d');
+        new Chart(portfolioCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    data: [210000, 212000, 208000, 215000, 213000, 214000, 215243],
+                    borderColor: 'rgba(255,255,255,0.8)',
+                    backgroundColor: 'rgba(255,255,255,0.1)',
+                    fill: true,
+                    tension: 0.4,
+                    borderWidth: 2,
+                    pointRadius: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: { x: { display: false }, y: { display: false } }
+            }
+        });
+        
+        // Crypto
+        const cryptoList = document.getElementById('crypto-list');
+        Object.entries(DATA.crypto).forEach(([symbol, data]) => {
+            const isUp = data.change >= 0;
+            const priceStr = ['BTC', 'ETH'].includes(symbol) ? `$${data.price.toLocaleString()}` : `$${data.price.toFixed(2)}`;
+            
+            const item = document.createElement('div');
+            item.className = 'crypto-item';
+            item.innerHTML = `
+                <div>
+                    <div class="crypto-name">${symbol}</div>
+                    <div class="crypto-label">${data.label}</div>
+                </div>
+                <div class="crypto-price">
+                    <div class="crypto-value">${priceStr}</div>
+                    <span class="stock-change ${isUp ? 'up' : 'down'}">${isUp ? '↑' : '↓'} ${Math.abs(data.change).toFixed(2)}%</span>
+                </div>
+            `;
+            cryptoList.appendChild(item);
+        });
+        
+        // Summary
+        const winners = stockOrder.filter(s => DATA.stocks[s].change > 0).length;
+        const losers = stockOrder.filter(s => DATA.stocks[s].change < 0).length;
+        const topGainer = stockOrder.reduce((best, s) => DATA.stocks[s].change > DATA.stocks[best].change ? s : best, stockOrder[0]);
+        const topLoser = stockOrder.reduce((worst, s) => DATA.stocks[s].change < DATA.stocks[worst].change ? s : worst, stockOrder[0]);
+        
+        document.getElementById('summary-grid').innerHTML = `
+            <div class="summary-item">
+                <div class="summary-label">Winners</div>
+                <div class="summary-value green">${winners}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Losers</div>
+                <div class="summary-value red">${losers}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Top Gainer</div>
+                <div class="summary-value green">${topGainer}</div>
+            </div>
+            <div class="summary-item">
+                <div class="summary-label">Top Loser</div>
+                <div class="summary-value red">${topLoser}</div>
+            </div>
+        `;
+        
+        // News
+        const newsList = document.getElementById('news-list');
+        DATA.news.forEach(text => {
+            const item = document.createElement('div');
+            item.className = 'news-item';
+            item.innerHTML = `<div class="news-dot"></div><div class="news-text">${text}</div>`;
+            newsList.appendChild(item);
+        });
+        
+        // Motivation
+        document.getElementById('motivation-content').innerHTML = `
+            <p class="quote-text">"${DATA.motivation.quote}"</p>
+            <p class="quote-author">— ${DATA.motivation.author}</p>
+        `;
+    </script>
+</body>
+</html>
