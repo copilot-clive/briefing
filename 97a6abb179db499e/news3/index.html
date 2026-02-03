@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok Outage Reveals Cloud Concentration Risk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0d0d1a;
+            --bg-card: #1a1a2e;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --accent-cyan: #22d3ee;
+            --accent-red: #f87171;
+            --radius: 20px;
+            --radius-sm: 12px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg-main); color: var(--text-primary); padding: 40px 24px; min-height: 100vh; }
+        .container { max-width: 700px; margin: 0 auto; }
+        .back-link { color: var(--accent-cyan); text-decoration: none; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 6px; margin-bottom: 24px; }
+        .back-link:hover { text-decoration: underline; }
+        .category { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-red); margin-bottom: 12px; }
+        h1 { font-size: 2rem; font-weight: 700; line-height: 1.3; margin-bottom: 16px; }
+        .meta { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 24px; }
+        .audio-player { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 32px; display: flex; align-items: center; gap: 16px; }
+        .play-btn { width: 56px; height: 56px; border-radius: 50%; background: var(--accent-cyan); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; flex-shrink: 0; transition: transform 0.2s; }
+        .play-btn:hover { transform: scale(1.05); }
+        .audio-info { flex: 1; }
+        .audio-title { font-weight: 600; margin-bottom: 4px; }
+        .audio-duration { font-size: 0.85rem; color: var(--text-muted); }
+        .content { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.8; }
+        .content p { margin-bottom: 20px; }
+        .content strong { color: var(--text-primary); }
+        .highlight { background: var(--bg-card); border-left: 3px solid var(--accent-red); padding: 16px 20px; margin: 24px 0; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+        .footer { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../" class="back-link">← Back to Briefing</a>
+        
+        <div class="category">⚠️ Infrastructure</div>
+        <h1>TikTok Restored After Oracle Data Center Outage Reveals Concentration Risk</h1>
+        <div class="meta">February 3, 2026 · 2 min read</div>
+
+        <div class="audio-player">
+            <button class="play-btn" onclick="toggleAudio()"><span id="play-icon">▶️</span></button>
+            <div class="audio-info">
+                <div class="audio-title">🎧 Listen to this article</div>
+                <div class="audio-duration">Full briefing · ~40 seconds</div>
+            </div>
+        </div>
+        <audio id="audio" src="audio.mp3"></audio>
+
+        <div class="content">
+            <p><strong>TikTok says it has restored service</strong> after outages attributed to a winter storm that knocked out a primary U.S. data center site operated by Oracle.</p>
+            
+            <p>The incident is a reminder that "always-on" consumer platforms can be taken down by very old-school issues: power, physical resilience, and cascading failures in network and storage layers once enough servers go offline at once.</p>
+
+            <div class="highlight">
+                <strong>The broader takeaway is about concentration risk.</strong> As more platforms consolidate their infrastructure into fewer cloud operators and colocation providers, failures become more systemic.
+            </div>
+
+            <p>For regulators and enterprise buyers, it strengthens the case for clearer resilience standards and disclosure norms, especially when critical communications and commerce ride on a few regional hubs.</p>
+            
+            <p><strong>For startups building on major clouds, this reinforces:</strong></p>
+            <p>• Importance of multi-region design</p>
+            <p>• Need for graceful degradation</p>
+            <p>• Value of incident-ready communication so user trust survives the next outage</p>
+
+            <p>Reliability is becoming a competitive advantage as more of the internet runs on a handful of infrastructure chokepoints.</p>
+        </div>
+
+        <div class="footer">
+            🦀 Generated by Clive · Source: TechCrunch
+        </div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('audio');
+        const playIcon = document.getElementById('play-icon');
+        function toggleAudio() { if (audio.paused) { audio.play(); playIcon.textContent = '⏸️'; } else { audio.pause(); playIcon.textContent = '▶️'; } }
+        audio.onended = () => { playIcon.textContent = '▶️'; };
+    </script>
+</body>
+</html>
