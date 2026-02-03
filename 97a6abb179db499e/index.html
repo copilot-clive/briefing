@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Briefing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #0d0d1a;
+            --bg-card: #1a1a2e;
+            --bg-card-inner: #252540;
+            --border: rgba(255, 255, 255, 0.08);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+            --text-muted: rgba(255, 255, 255, 0.4);
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-cyan: #22d3ee;
+            --accent-orange: #fb923c;
+            --accent-purple: #a29bfe;
+            --radius: 20px;
+            --radius-sm: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-main);
+            color: var(--text-primary);
+            padding: 40px 24px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header-emoji {
+            font-size: 3rem;
+            margin-bottom: 12px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #22d3ee, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .date {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .greeting {
+            color: var(--text-secondary);
+            margin-top: 8px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .card-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .card-icon.cyan { background: rgba(34, 211, 238, 0.15); }
+        .card-icon.green { background: rgba(74, 222, 128, 0.15); }
+        .card-icon.orange { background: rgba(251, 146, 60, 0.15); }
+        .card-icon.purple { background: rgba(167, 139, 250, 0.15); }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .card-subtitle {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .card-content {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .value-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .value-row:last-child {
+            border-bottom: none;
+        }
+
+        .change.positive { color: var(--accent-green); }
+        .change.negative { color: var(--accent-red); }
+
+        .audio-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card-inner);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 16px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+            margin-top: 16px;
+        }
+
+        .audio-btn:hover {
+            background: rgba(34, 211, 238, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .audio-btn.playing {
+            background: rgba(34, 211, 238, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 0 16px;
+        }
+
+        .footer-crab {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .footer-text {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 600px) {
+            .header h1 { font-size: 1.8rem; }
+            .value { font-size: 1.2rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-emoji">👋</div>
+            <h1>Morning Briefing</h1>
+            <p class="date">Monday, February 3, 2026</p>
+            <p class="greeting">Good morning, Bernhard. Here's your daily snapshot.</p>
+        </header>
+
+        <!-- Weather Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon cyan">🌤️</div>
+                <div>
+                    <div class="card-title">Weather in Doha</div>
+                    <div class="card-subtitle">Current conditions</div>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="value">17°C</div>
+                <p style="margin-top: 8px;">🌫️ Foggy · 100% humidity · Wind ↑ 9km/h</p>
+            </div>
+            <button class="audio-btn" onclick="playAudio('weather', this)">
+                <span>🔊</span> Listen to weather briefing
+            </button>
+            <audio id="audio-weather" src="weather.mp3"></audio>
+        </div>
+
+        <!-- Markets Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon green">📈</div>
+                <div>
+                    <div class="card-title">Markets</div>
+                    <div class="card-subtitle">US Stock Indices</div>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="value-row">
+                    <span>S&P 500</span>
+                    <span><span class="value">7,003</span> <span class="change positive">+0.38%</span></span>
+                </div>
+                <div class="value-row">
+                    <span>Dow Jones</span>
+                    <span><span class="value">49,400</span> <span class="change positive">+1.0%</span></span>
+                </div>
+                <div class="value-row">
+                    <span>Nasdaq</span>
+                    <span><span class="value">—</span> <span class="change positive">+0.6%</span></span>
+                </div>
+            </div>
+            <button class="audio-btn" onclick="playAudio('markets', this)">
+                <span>🔊</span> Listen to markets briefing
+            </button>
+            <audio id="audio-markets" src="markets.mp3"></audio>
+        </div>
+
+        <!-- Crypto Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon orange">🪙</div>
+                <div>
+                    <div class="card-title">Crypto</div>
+                    <div class="card-subtitle">24h change</div>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="value-row">
+                    <span>Bitcoin</span>
+                    <span><span class="value">$78,271</span> <span class="change positive">+3.5%</span></span>
+                </div>
+                <div class="value-row">
+                    <span>Ethereum</span>
+                    <span><span class="value">$2,313</span> <span class="change positive">+5.1%</span></span>
+                </div>
+            </div>
+            <button class="audio-btn" onclick="playAudio('crypto', this)">
+                <span>🔊</span> Listen to crypto briefing
+            </button>
+            <audio id="audio-crypto" src="crypto.mp3"></audio>
+        </div>
+
+        <!-- Motivation Card -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon purple">💡</div>
+                <div>
+                    <div class="card-title">Daily Motivation</div>
+                    <div class="card-subtitle">Stay the course</div>
+                </div>
+            </div>
+            <div class="card-content">
+                <p style="font-style: italic; color: var(--accent-purple);">"The process is the goal. Every day you show up and do the work, you're already winning."</p>
+                <p style="margin-top: 12px;">Results are a byproduct of consistent action. Trust the system. The compound effect is real.</p>
+            </div>
+            <button class="audio-btn" onclick="playAudio('motivation', this)">
+                <span>🔊</span> Listen to motivation
+            </button>
+            <audio id="audio-motivation" src="motivation.mp3"></audio>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-crab">🦀</div>
+            <p class="footer-text">Generated by Clive · February 3, 2026 at 09:24 AM</p>
+        </footer>
+    </div>
+
+    <script>
+        let currentlyPlaying = null;
+
+        function playAudio(id, btn) {
+            const audio = document.getElementById('audio-' + id);
+            
+            // Stop any currently playing audio
+            if (currentlyPlaying && currentlyPlaying !== audio) {
+                currentlyPlaying.pause();
+                currentlyPlaying.currentTime = 0;
+                document.querySelectorAll('.audio-btn').forEach(b => b.classList.remove('playing'));
+            }
+
+            if (audio.paused) {
+                audio.play();
+                btn.classList.add('playing');
+                btn.querySelector('span').textContent = '⏸️';
+                currentlyPlaying = audio;
+            } else {
+                audio.pause();
+                btn.classList.remove('playing');
+                btn.querySelector('span').textContent = '🔊';
+                currentlyPlaying = null;
+            }
+
+            audio.onended = function() {
+                btn.classList.remove('playing');
+                btn.querySelector('span').textContent = '🔊';
+                currentlyPlaying = null;
+            };
+        }
+    </script>
+</body>
+</html>
