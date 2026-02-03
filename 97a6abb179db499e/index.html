@@ -23,11 +23,7 @@
             --radius-sm: 12px;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -37,21 +33,10 @@
             min-height: 100vh;
         }
 
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-        }
+        .container { max-width: 800px; margin: 0 auto; }
 
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-        }
-
-        .header-emoji {
-            font-size: 3rem;
-            margin-bottom: 12px;
-        }
-
+        .header { text-align: center; margin-bottom: 40px; }
+        .header-emoji { font-size: 3rem; margin-bottom: 12px; }
         .header h1 {
             font-size: 2.5rem;
             font-weight: 700;
@@ -60,16 +45,8 @@
             -webkit-text-fill-color: transparent;
             margin-bottom: 8px;
         }
-
-        .date {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .greeting {
-            color: var(--text-secondary);
-            margin-top: 8px;
-        }
+        .date { color: var(--text-muted); font-size: 0.9rem; }
+        .greeting { color: var(--text-secondary); margin-top: 8px; }
 
         .card {
             background: var(--bg-card);
@@ -83,7 +60,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            margin-bottom: 16px;
         }
 
         .card-icon {
@@ -94,6 +70,7 @@
             align-items: center;
             justify-content: center;
             font-size: 1.2rem;
+            flex-shrink: 0;
         }
 
         .card-icon.cyan { background: rgba(34, 211, 238, 0.15); }
@@ -101,21 +78,62 @@
         .card-icon.orange { background: rgba(251, 146, 60, 0.15); }
         .card-icon.purple { background: rgba(167, 139, 250, 0.15); }
 
-        .card-title {
-            font-size: 1rem;
-            font-weight: 600;
+        .card-info { flex: 1; }
+        .card-title { font-size: 1rem; font-weight: 600; }
+        .card-summary { font-size: 0.85rem; color: var(--text-secondary); margin-top: 4px; }
+
+        .card-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
         }
 
-        .card-subtitle {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
-
-        .card-content {
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--bg-card-inner);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 14px;
             color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.6;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
         }
+
+        .btn:hover {
+            background: rgba(34, 211, 238, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .btn.playing {
+            background: rgba(34, 211, 238, 0.15);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .btn-expand {
+            background: transparent;
+            border: none;
+            color: var(--accent-cyan);
+            cursor: pointer;
+            font-size: 0.8rem;
+            padding: 8px 12px;
+        }
+
+        .btn-expand:hover { text-decoration: underline; }
+
+        .expanded-content {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .expanded-content.show { display: block; }
 
         .value {
             font-size: 1.5rem;
@@ -131,58 +149,33 @@
             border-bottom: 1px solid var(--border);
         }
 
-        .value-row:last-child {
-            border-bottom: none;
-        }
+        .value-row:last-child { border-bottom: none; }
 
         .change.positive { color: var(--accent-green); }
         .change.negative { color: var(--accent-red); }
 
-        .audio-btn {
+        .detail-text {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+
+        .audio-full {
             display: flex;
             align-items: center;
             gap: 8px;
-            background: var(--bg-card-inner);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            padding: 10px 16px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            font-size: 0.85rem;
-            transition: all 0.2s;
             margin-top: 16px;
         }
 
-        .audio-btn:hover {
-            background: rgba(34, 211, 238, 0.1);
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-        }
-
-        .audio-btn.playing {
-            background: rgba(34, 211, 238, 0.15);
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-        }
-
-        .footer {
-            text-align: center;
-            padding: 40px 0 16px;
-        }
-
-        .footer-crab {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-
-        .footer-text {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-        }
+        .footer { text-align: center; padding: 40px 0 16px; }
+        .footer-crab { font-size: 2rem; margin-bottom: 8px; }
+        .footer-text { font-size: 0.75rem; color: var(--text-muted); }
 
         @media (max-width: 600px) {
             .header h1 { font-size: 1.8rem; }
-            .value { font-size: 1.2rem; }
+            .card-header { flex-wrap: wrap; }
+            .card-actions { width: 100%; margin-top: 12px; }
         }
     </style>
 </head>
@@ -199,18 +192,31 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-icon cyan">🌤️</div>
-                <div>
+                <div class="card-info">
                     <div class="card-title">Weather in Doha</div>
-                    <div class="card-subtitle">Current conditions</div>
+                    <div class="card-summary">17°C · Foggy · 100% humidity</div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn" onclick="playAudio('weather-short', this)">
+                        <span>🔊</span> Play
+                    </button>
+                    <button class="btn-expand" onclick="toggleExpand('weather')">
+                        Expand ▼
+                    </button>
                 </div>
             </div>
-            <div class="card-content">
-                <div class="value">17°C</div>
-                <p style="margin-top: 8px;">🌫️ Foggy · 100% humidity · Wind ↑ 9km/h</p>
+            <div class="expanded-content" id="expand-weather">
+                <div class="detail-text">
+                    <p><strong>Current Conditions:</strong> 17°C with foggy conditions and 100% humidity. Winds from the north at 9 km/h.</p>
+                    <p style="margin-top: 12px;">A misty morning — perfect for staying indoors with some paperwork. Visibility is reduced, so take care if driving early.</p>
+                </div>
+                <div class="audio-full">
+                    <button class="btn" onclick="playAudio('weather', this)">
+                        <span>🔊</span> Full briefing
+                    </button>
+                </div>
             </div>
-            <button class="audio-btn" onclick="playAudio('weather', this)">
-                <span>🔊</span> Listen to weather briefing
-            </button>
+            <audio id="audio-weather-short" src="weather-short.mp3"></audio>
             <audio id="audio-weather" src="weather.mp3"></audio>
         </div>
 
@@ -218,12 +224,20 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-icon green">📈</div>
-                <div>
+                <div class="card-info">
                     <div class="card-title">Markets</div>
-                    <div class="card-subtitle">US Stock Indices</div>
+                    <div class="card-summary">S&P +0.4% · Dow +1.0% · Nasdaq +0.6%</div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn" onclick="playAudio('markets-short', this)">
+                        <span>🔊</span> Play
+                    </button>
+                    <button class="btn-expand" onclick="toggleExpand('markets')">
+                        Expand ▼
+                    </button>
                 </div>
             </div>
-            <div class="card-content">
+            <div class="expanded-content" id="expand-markets">
                 <div class="value-row">
                     <span>S&P 500</span>
                     <span><span class="value">7,003</span> <span class="change positive">+0.38%</span></span>
@@ -236,10 +250,16 @@
                     <span>Nasdaq</span>
                     <span><span class="value">—</span> <span class="change positive">+0.6%</span></span>
                 </div>
+                <div class="detail-text" style="margin-top: 16px;">
+                    Markets recovering after a volatile week. Silver and precious metals saw big swings. Tech stocks bouncing back.
+                </div>
+                <div class="audio-full">
+                    <button class="btn" onclick="playAudio('markets', this)">
+                        <span>🔊</span> Full briefing
+                    </button>
+                </div>
             </div>
-            <button class="audio-btn" onclick="playAudio('markets', this)">
-                <span>🔊</span> Listen to markets briefing
-            </button>
+            <audio id="audio-markets-short" src="markets-short.mp3"></audio>
             <audio id="audio-markets" src="markets.mp3"></audio>
         </div>
 
@@ -247,12 +267,20 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-icon orange">🪙</div>
-                <div>
+                <div class="card-info">
                     <div class="card-title">Crypto</div>
-                    <div class="card-subtitle">24h change</div>
+                    <div class="card-summary">BTC $78,271 (+3.5%) · ETH $2,313 (+5.1%)</div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn" onclick="playAudio('crypto-short', this)">
+                        <span>🔊</span> Play
+                    </button>
+                    <button class="btn-expand" onclick="toggleExpand('crypto')">
+                        Expand ▼
+                    </button>
                 </div>
             </div>
-            <div class="card-content">
+            <div class="expanded-content" id="expand-crypto">
                 <div class="value-row">
                     <span>Bitcoin</span>
                     <span><span class="value">$78,271</span> <span class="change positive">+3.5%</span></span>
@@ -261,10 +289,16 @@
                     <span>Ethereum</span>
                     <span><span class="value">$2,313</span> <span class="change positive">+5.1%</span></span>
                 </div>
+                <div class="detail-text" style="margin-top: 16px;">
+                    Both major cryptocurrencies showing strong momentum. ETH outperforming BTC today with a 5%+ gain.
+                </div>
+                <div class="audio-full">
+                    <button class="btn" onclick="playAudio('crypto', this)">
+                        <span>🔊</span> Full briefing
+                    </button>
+                </div>
             </div>
-            <button class="audio-btn" onclick="playAudio('crypto', this)">
-                <span>🔊</span> Listen to crypto briefing
-            </button>
+            <audio id="audio-crypto-short" src="crypto-short.mp3"></audio>
             <audio id="audio-crypto" src="crypto.mp3"></audio>
         </div>
 
@@ -272,29 +306,43 @@
         <div class="card">
             <div class="card-header">
                 <div class="card-icon purple">💡</div>
-                <div>
+                <div class="card-info">
                     <div class="card-title">Daily Motivation</div>
-                    <div class="card-subtitle">Stay the course</div>
+                    <div class="card-summary">"The process is the goal."</div>
+                </div>
+                <div class="card-actions">
+                    <button class="btn" onclick="playAudio('motivation-short', this)">
+                        <span>🔊</span> Play
+                    </button>
+                    <button class="btn-expand" onclick="toggleExpand('motivation')">
+                        Expand ▼
+                    </button>
                 </div>
             </div>
-            <div class="card-content">
-                <p style="font-style: italic; color: var(--accent-purple);">"The process is the goal. Every day you show up and do the work, you're already winning."</p>
-                <p style="margin-top: 12px;">Results are a byproduct of consistent action. Trust the system. The compound effect is real.</p>
+            <div class="expanded-content" id="expand-motivation">
+                <div class="detail-text">
+                    <p style="font-style: italic; color: var(--accent-purple); font-size: 1.1rem;">"The process is the goal. Every day you show up and do the work, you're already winning."</p>
+                    <p style="margin-top: 16px;">Results are just a byproduct of consistent action. Trust the system. Stay the course. The compound effect is real — small daily improvements lead to staggering results over time.</p>
+                </div>
+                <div class="audio-full">
+                    <button class="btn" onclick="playAudio('motivation', this)">
+                        <span>🔊</span> Full briefing
+                    </button>
+                </div>
             </div>
-            <button class="audio-btn" onclick="playAudio('motivation', this)">
-                <span>🔊</span> Listen to motivation
-            </button>
+            <audio id="audio-motivation-short" src="motivation-short.mp3"></audio>
             <audio id="audio-motivation" src="motivation.mp3"></audio>
         </div>
 
         <footer class="footer">
             <div class="footer-crab">🦀</div>
-            <p class="footer-text">Generated by Clive · February 3, 2026 at 09:24 AM</p>
+            <p class="footer-text">Generated by Clive · February 3, 2026 at 09:26 AM</p>
         </footer>
     </div>
 
     <script>
         let currentlyPlaying = null;
+        let currentBtn = null;
 
         function playAudio(id, btn) {
             const audio = document.getElementById('audio-' + id);
@@ -303,7 +351,10 @@
             if (currentlyPlaying && currentlyPlaying !== audio) {
                 currentlyPlaying.pause();
                 currentlyPlaying.currentTime = 0;
-                document.querySelectorAll('.audio-btn').forEach(b => b.classList.remove('playing'));
+                if (currentBtn) {
+                    currentBtn.classList.remove('playing');
+                    currentBtn.querySelector('span').textContent = '🔊';
+                }
             }
 
             if (audio.paused) {
@@ -311,18 +362,34 @@
                 btn.classList.add('playing');
                 btn.querySelector('span').textContent = '⏸️';
                 currentlyPlaying = audio;
+                currentBtn = btn;
             } else {
                 audio.pause();
                 btn.classList.remove('playing');
                 btn.querySelector('span').textContent = '🔊';
                 currentlyPlaying = null;
+                currentBtn = null;
             }
 
             audio.onended = function() {
                 btn.classList.remove('playing');
                 btn.querySelector('span').textContent = '🔊';
                 currentlyPlaying = null;
+                currentBtn = null;
             };
+        }
+
+        function toggleExpand(id) {
+            const content = document.getElementById('expand-' + id);
+            const btn = event.target;
+            
+            if (content.classList.contains('show')) {
+                content.classList.remove('show');
+                btn.textContent = 'Expand ▼';
+            } else {
+                content.classList.add('show');
+                btn.textContent = 'Collapse ▲';
+            }
         }
     </script>
 </body>
