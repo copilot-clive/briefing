@@ -117,6 +117,66 @@ def fetch_market_news():
     ]
 
 
+def fetch_middle_east_news():
+    """Fetch Middle East news from RSS feeds (Reuters, AP, BBC)"""
+    import xml.etree.ElementTree as ET
+    
+    feeds = [
+        "https://www.aljazeera.com/xml/rss/all.xml",
+        "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml",
+    ]
+    
+    articles = []
+    
+    for feed_url in feeds:
+        try:
+            resp = requests.get(feed_url, timeout=10, headers={
+                'User-Agent': 'Mozilla/5.0 (compatible; BriefingBot/1.0)'
+            })
+            if resp.status_code == 200:
+                root = ET.fromstring(resp.content)
+                for item in root.findall('.//item')[:3]:  # Top 3 from each
+                    title = item.find('title')
+                    desc = item.find('description')
+                    if title is not None:
+                        articles.append({
+                            'title': title.text,
+                            'description': desc.text if desc is not None else '',
+                            'source': 'BBC' if 'bbc' in feed_url else 'Al Jazeera'
+                        })
+        except Exception as e:
+            print(f"Error fetching {feed_url}: {e}")
+    
+    return articles[:5]  # Top 5 overall
+
+
+def generate_news_script(data):
+    """Generate Middle East news analysis - conversational"""
+    news = data.get("news", {})
+    articles = news.get("middle_east", [])
+    
+    if not articles:
+        return "No major Middle East news to report right now. Things seem relatively quiet."
+    
+    script = "Alright, let's talk about what's happening in the region. "
+    
+    # Analyze the headlines
+    for i, article in enumerate(articles[:3]):
+        title = article.get('title', '')
+        source = article.get('source', '')
+        
+        if i == 0:
+            script += f"The big story: {title}. "
+        elif i == 1:
+            script += f"Also worth noting: {title}. "
+        else:
+            script += f"And {title}. "
+    
+    script += "I'll keep an eye on these and let you know if anything develops."
+    
+    return script.strip()
+
+
 def generate_voice(text, voice, output_path, speed=1.0):
     """Generate voice audio using Kokoro speak script"""
     try:
@@ -143,24 +203,35 @@ def generate_all_voices(briefing_data, output_dir):
     
     # Main summary
     summary_text = generate_summary_script(briefing_data)
+    print(f"  Summary script: {len(summary_text)} chars")
     summary_path = output_dir / "audio_summary.wav"
     if generate_voice(summary_text, VOICES["summary"], summary_path, speed=0.95):
         voice_files["summary"] = "audio_summary.wav"
     
-    # Stocks detail
+    # Stocks analysis
     stocks_text = generate_stocks_script(briefing_data)
+    print(f"  Stocks script: {len(stocks_text)} chars")
     stocks_path = output_dir / "audio_stocks.wav"
     if generate_voice(stocks_text, VOICES["stocks"], stocks_path, speed=1.0):
         voice_files["stocks"] = "audio_stocks.wav"
     
-    # Crypto detail
+    # Crypto analysis
     crypto_text = generate_crypto_script(briefing_data)
+    print(f"  Crypto script: {len(crypto_text)} chars")
     crypto_path = output_dir / "audio_crypto.wav"
     if generate_voice(crypto_text, VOICES["crypto"], crypto_path, speed=1.0):
         voice_files["crypto"] = "audio_crypto.wav"
     
-    # Weather detail
+    # News analysis (Middle East)
+    news_text = generate_news_script(briefing_data)
+    print(f"  News script: {len(news_text)} chars")
+    news_path = output_dir / "audio_news.wav"
+    if generate_voice(news_text, VOICES["news"], news_path, speed=1.0):
+        voice_files["news"] = "audio_news.wav"
+    
+    # Weather
     weather_text = generate_weather_script(briefing_data)
+    print(f"  Weather script: {len(weather_text)} chars")
     weather_path = output_dir / "audio_weather.wav"
     if generate_voice(weather_text, VOICES["weather"], weather_path, speed=1.0):
         voice_files["weather"] = "audio_weather.wav"
@@ -169,126 +240,217 @@ def generate_all_voices(briefing_data, output_dir):
 
 
 def generate_summary_script(data):
-    """Generate main summary voice script"""
+    """Generate main summary voice script - conversational, analytical"""
     date = datetime.now().strftime("%A, %B %d")
     
-    # Calculate totals
     portfolio = data.get("portfolio", {})
     stocks = data.get("stocks", {})
     crypto = data.get("crypto", {})
     weather = data.get("weather", {})
+    news = data.get("news", {})
     
-    total_value = sum(
-        stocks.get(sym, {}).get("price", 0) * info.get("shares", 0)
-        for sym, info in portfolio.get("stocks", {}).items()
-    )
-    total_value += portfolio.get("stocksCashUSD", 0)
+    # Find the story - biggest movers and why
+    movers = [(sym, stocks.get(sym, {}).get("change_pct", 0)) for sym in portfolio.get("stocks", {}).keys()]
+    movers.sort(key=lambda x: x[1])  # Sort by change, losers first
     
-    # Crypto value
-    btc_price = crypto.get("bitcoin", {}).get("usd", 0)
-    eth_price = crypto.get("ethereum", {}).get("usd", 0)
-    btc_held = portfolio.get("crypto", {}).get("BTC", {}).get("amount", 0)
-    eth_held = portfolio.get("crypto", {}).get("ETH", {}).get("amount", 0)
-    crypto_value = btc_price * btc_held + eth_price * eth_held
+    biggest_loser = movers[0] if movers else None
+    biggest_winner = movers[-1] if movers else None
     
-    # Weather
+    btc_change = crypto.get("bitcoin", {}).get("usd_24h_change", 0)
+    eth_change = crypto.get("ethereum", {}).get("usd_24h_change", 0)
+    
     temp = weather.get("current_weather", {}).get("temperature", "unknown")
     
-    # Build script
-    script = f"""
-    Good morning Bernhard. It's {date}. Here's your daily briefing.
+    # Build conversational script
+    script = f"Morning Bernhard. {date}. "
     
-    Your stock portfolio is currently valued at approximately {int(total_value / 1000)} thousand dollars.
-    """
+    # Lead with the main story
+    if abs(btc_change) > 5:
+        script += f"Crypto's having a rough day — Bitcoin's down about {abs(btc_change):.0f} percent. "
+        script += "Looks like risk-off sentiment across the board. "
     
-    # Check biggest movers
-    movers = [(sym, stocks.get(sym, {}).get("change_pct", 0)) for sym in portfolio.get("stocks", {}).keys()]
-    movers.sort(key=lambda x: abs(x[1]), reverse=True)
+    # Stock narrative
+    if biggest_loser and biggest_loser[1] < -3:
+        script += f"{biggest_loser[0]} is taking the biggest hit in your portfolio today. "
     
-    if movers:
-        top = movers[0]
-        direction = "up" if top[1] > 0 else "down"
-        script += f"The biggest mover today is {top[0]}, {direction} {abs(top[1]):.1f} percent. "
+    if biggest_winner and biggest_winner[1] > 1:
+        script += f"On the bright side, {biggest_winner[0]} is holding up well. "
     
-    # Crypto
-    btc_change = crypto.get("bitcoin", {}).get("usd_24h_change", 0)
-    script += f"Bitcoin is at {int(btc_price)} dollars, "
-    script += f"{'up' if btc_change > 0 else 'down'} {abs(btc_change):.1f} percent. "
+    # Overall vibe
+    avg_change = sum(m[1] for m in movers) / len(movers) if movers else 0
+    if avg_change < -2:
+        script += "Overall, it's a red day — but nothing to panic about. Markets do this. "
+    elif avg_change > 1:
+        script += "Green across the board today — nice to see. "
+    else:
+        script += "Markets are mixed, nothing dramatic. "
     
-    # Weather
-    script += f"The weather in Doha is {temp} degrees celsius. "
+    # Weather casual
+    script += f"It's {temp:.0f} degrees in Doha. "
     
-    script += "Expand any section for more details. Have a productive day."
+    # Middle East news teaser
+    if news.get("middle_east"):
+        script += "I've got some Middle East updates for you in the news section. "
+    
+    script += "Tap into any section if you want the deeper analysis."
     
     return script.strip()
 
 
 def generate_stocks_script(data):
-    """Generate stocks detail voice script"""
+    """Generate stocks analysis - WHY things are moving, not just numbers"""
     stocks = data.get("stocks", {})
     portfolio = data.get("portfolio", {})
     
-    script = "Here's your detailed stock breakdown. "
-    
+    # Analyze the movements
+    movers = []
     for symbol, info in portfolio.get("stocks", {}).items():
         stock_data = stocks.get(symbol, {})
-        price = stock_data.get("price", 0)
         change = stock_data.get("change_pct", 0)
-        shares = info.get("shares", 0)
-        value = price * shares
-        
-        direction = "up" if change > 0 else "down"
-        script += f"{symbol} is at {price:.0f} dollars, {direction} {abs(change):.1f} percent. "
-        script += f"Your {shares:.1f} shares are worth {value/1000:.1f} thousand. "
+        movers.append((symbol, change))
+    
+    movers.sort(key=lambda x: x[1])
+    
+    script = "Alright, let's talk about what's actually happening with your stocks. "
+    
+    # Sector analysis
+    tech_stocks = ['NVDA', 'GOOGL', 'META', 'AAPL', 'MSFT', 'AMZN']
+    tech_changes = [stocks.get(s, {}).get("change_pct", 0) for s in tech_stocks if s in stocks]
+    avg_tech = sum(tech_changes) / len(tech_changes) if tech_changes else 0
+    
+    if avg_tech < -2:
+        script += "Tech is getting hit across the board today. "
+        script += "This usually means either rate concerns, or investors rotating out of growth. "
+    elif avg_tech > 2:
+        script += "Tech is leading the charge today — risk-on mode. "
+    
+    # Individual stock stories
+    if 'NVDA' in stocks:
+        nvda_change = stocks['NVDA'].get('change_pct', 0)
+        if abs(nvda_change) > 2:
+            if nvda_change < 0:
+                script += f"Nvidia's down — probably AI sentiment cooling off, or chip sector rotation. Nothing fundamental changed. "
+            else:
+                script += f"Nvidia's pushing higher — AI hype train keeps rolling. "
+    
+    if 'TSLA' in stocks:
+        tsla_change = stocks['TSLA'].get('change_pct', 0)
+        if abs(tsla_change) > 2:
+            script += f"Tesla's volatile as usual — you know how that goes. "
+    
+    if 'AMZN' in stocks:
+        amzn_change = stocks['AMZN'].get('change_pct', 0)
+        if amzn_change < -3:
+            script += "Amazon taking a hit — could be profit-taking or broader retail concerns. "
+    
+    # VOO as market proxy
+    if 'VOO' in stocks:
+        voo_change = stocks['VOO'].get('change_pct', 0)
+        if voo_change < -1:
+            script += f"The broader market via VOO is down too, so this isn't just your picks — it's the whole market. "
+        elif voo_change > 1:
+            script += "The market overall is up, so rising tide lifting all boats. "
+    
+    # Closing thought
+    script += "No major earnings or news moving your specific holdings that I can see. Mostly macro sentiment."
     
     return script.strip()
 
 
 def generate_crypto_script(data):
-    """Generate crypto detail voice script"""
+    """Generate crypto analysis - sentiment, why, predictions"""
     crypto = data.get("crypto", {})
-    portfolio = data.get("portfolio", {})
     
     btc = crypto.get("bitcoin", {})
     eth = crypto.get("ethereum", {})
     
-    btc_held = portfolio.get("crypto", {}).get("BTC", {}).get("amount", 0)
-    eth_held = portfolio.get("crypto", {}).get("ETH", {}).get("amount", 0)
+    btc_change = btc.get("usd_24h_change", 0)
+    eth_change = eth.get("usd_24h_change", 0)
+    btc_price = btc.get("usd", 0)
     
-    script = "Here's your crypto update. "
+    script = "Okay, crypto. "
     
-    if btc:
-        btc_val = btc.get("usd", 0) * btc_held
-        btc_change = btc.get("usd_24h_change", 0)
-        script += f"Bitcoin is trading at {btc.get('usd', 0):.0f} dollars, "
-        script += f"{'up' if btc_change > 0 else 'down'} {abs(btc_change):.1f} percent in the last 24 hours. "
-        script += f"Your point six bitcoin is worth {btc_val/1000:.1f} thousand dollars. "
+    # Analyze the move
+    if btc_change < -5:
+        script += "We're seeing a significant pullback. "
+        script += "This kind of drop is usually one of three things: "
+        script += "either macro fear pushing people to cash, "
+        script += "whales taking profits, "
+        script += "or some regulatory news spooking the market. "
+        script += "Nothing has fundamentally changed about Bitcoin though. "
+        
+        if btc_price > 60000:
+            script += "We're still well above sixty K, so this is normal volatility in the grand scheme. "
+        
+    elif btc_change < -2:
+        script += "Slight pullback — nothing unusual. Crypto does this. "
+        script += "Could just be profit-taking after recent gains. "
+        
+    elif btc_change > 5:
+        script += "Nice rally happening. "
+        script += "Usually driven by institutional buying or positive sentiment around ETFs. "
+        
+    else:
+        script += "Pretty quiet in crypto land. Consolidation phase. "
     
-    if eth:
-        eth_val = eth.get("usd", 0) * eth_held
-        eth_change = eth.get("usd_24h_change", 0)
-        script += f"Ethereum is at {eth.get('usd', 0):.0f} dollars, "
-        script += f"{'up' if eth_change > 0 else 'down'} {abs(eth_change):.1f} percent. "
-        script += f"Your eleven E T H is worth {eth_val/1000:.1f} thousand. "
+    # ETH correlation
+    if abs(btc_change - eth_change) < 2:
+        script += "ETH is moving in lockstep with Bitcoin, which is normal. "
+    elif eth_change < btc_change - 3:
+        script += "Ethereum's underperforming Bitcoin today — sometimes means money rotating into BTC for safety. "
+    elif eth_change > btc_change + 3:
+        script += "Interesting — ETH is outperforming BTC. Could be Layer 2 hype or DeFi activity picking up. "
+    
+    # Sentiment
+    if btc_change < -5:
+        script += "Sentiment is fearful right now, which historically has been a good time to accumulate if you're long-term. "
+    
+    script += "You're holding for the long run anyway, so don't let the daily noise stress you out."
     
     return script.strip()
 
 
 def generate_weather_script(data):
-    """Generate weather detail voice script"""
+    """Generate weather - casual and practical"""
     weather = data.get("weather", {})
     current = weather.get("current_weather", {})
     daily = weather.get("daily", {})
     
-    temp = current.get("temperature", "unknown")
+    temp = current.get("temperature", 20)
     wind = current.get("windspeed", 0)
+    code = current.get("weathercode", 0)
     
-    script = f"Current conditions in Doha: {temp} degrees celsius with winds at {wind:.0f} kilometers per hour. "
+    script = ""
     
+    # Casual weather description
+    if temp < 15:
+        script += "It's actually cool out today — grab a light jacket if you're heading out. "
+    elif temp < 22:
+        script += "Perfect weather today — not too hot, not too cold. Great day to be outside. "
+    elif temp < 30:
+        script += "Warming up out there. Comfortable but you'll want to stay hydrated. "
+    elif temp < 38:
+        script += "Hot one today. Standard Doha. AC is your friend. "
+    else:
+        script += "It's scorching out there. Maybe keep the outdoor activities to early morning or evening. "
+    
+    # Wind
+    if wind > 30:
+        script += f"It's pretty windy — {wind:.0f} K per hour — might kick up some dust. "
+    elif wind > 15:
+        script += "There's a nice breeze which helps. "
+    
+    # Daily forecast
     if daily and daily.get("temperature_2m_max"):
-        high = daily["temperature_2m_max"][0] if daily["temperature_2m_max"] else "unknown"
-        low = daily["temperature_2m_min"][0] if daily.get("temperature_2m_min") else "unknown"
-        script += f"Today's high will be {high:.0f} degrees, low of {low:.0f}. "
+        high = daily["temperature_2m_max"][0] if daily["temperature_2m_max"] else temp
+        if high > temp + 5:
+            script += f"Heads up — it'll get warmer later, hitting around {high:.0f} degrees. "
+    
+    # Practical advice
+    if code in [61, 63, 65, 80, 81, 82]:
+        script += "Looks like rain is possible — might want an umbrella just in case. "
+    
+    script += "That's it for weather. Have a good one."
     
     return script.strip()
 
@@ -358,6 +520,17 @@ def generate_html(briefing_data, voice_files, output_dir):
     eth_data = crypto.get("ethereum", {})
     btc_change = btc_data.get("usd_24h_change", 0)
     eth_change = eth_data.get("usd_24h_change", 0)
+    
+    # Build news items
+    news = briefing_data.get("news", {})
+    middle_east_news = news.get("middle_east", [])
+    news_items = ""
+    for article in middle_east_news[:3]:
+        title = article.get('title', '')[:80]  # Truncate long titles
+        source = article.get('source', '')
+        news_items += f'<div>• {title} <span style="color: var(--text-muted);">({source})</span></div>'
+    if not news_items:
+        news_items = '<div>• No major news at this time</div>'
     
     html = f'''<!DOCTYPE html>
 <html lang="en">
@@ -745,18 +918,32 @@ def generate_html(briefing_data, voice_files, output_dir):
                 </div>
             </div>
 
-            <!-- Markets Today Card -->
+            <!-- Middle East News Card -->
             <div class="card">
+                <button class="expand-btn" onclick="togglePanel('news-panel', this)">
+                    <span>More</span> ▼
+                </button>
                 <div class="card-header">
                     <div class="card-icon orange">🌍</div>
                     <div>
-                        <div class="card-title">Markets Today</div>
-                        <div class="card-subtitle">Key moves</div>
+                        <div class="card-title">Middle East</div>
+                        <div class="card-subtitle">Regional news</div>
                     </div>
                 </div>
                 <div style="font-size: 0.9rem; line-height: 1.8;">
-                    <div>• Market data as of last close</div>
-                    <div>• Crypto prices are live (24h change)</div>
+                    {news_items}
+                </div>
+                
+                <div id="news-panel" class="expand-panel">
+                    <div class="panel-audio">
+                        <button class="panel-play-btn" onclick="toggleAudio('news-audio', this)">▶️</button>
+                        <span>Listen to news analysis</span>
+                        <audio id="news-audio" src="audio_news.wav"></audio>
+                    </div>
+                    <div class="panel-content">
+                        <h4>Regional Analysis</h4>
+                        <p>What's happening in the Middle East and what it means.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -850,12 +1037,18 @@ def main():
     print("Fetching weather...")
     weather = fetch_weather()
     
+    print("Fetching Middle East news...")
+    middle_east_news = fetch_middle_east_news()
+    
     # Compile briefing data
     briefing_data = {
         "portfolio": portfolio,
         "stocks": stocks,
         "crypto": crypto,
         "weather": weather,
+        "news": {
+            "middle_east": middle_east_news
+        },
         "generated": datetime.now().isoformat(),
     }
     
