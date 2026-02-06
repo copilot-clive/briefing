@@ -22,11 +22,11 @@ KOKORO_SPEAK = Path.home() / "kokoro-tts" / "speak"
 PORTFOLIO_PATH = Path.home() / "clawd" / "config" / "portfolio.json"
 OUTPUT_DIR = Path.home() / "projects" / "briefing"
 VOICES = {
-    "summary": "bm_lewis",      # Clive - British male
+    "summary": "bm_lewis",      # Clive - British male grumpy
     "stocks": "am_michael",     # American male professional
-    "crypto": "af_bella",       # American female modern
+    "crypto": "af_nova",        # American female tech-savvy
     "news": "bf_emma",          # British female authoritative
-    "weather": "af_heart",      # Warm friendly
+    "weather": "am_adam",       # American male friendly
 }
 
 # News sources (AllSides Center-rated)
@@ -88,25 +88,34 @@ def fetch_crypto_data():
         return {}
 
 
-def fetch_weather(city="Doha"):
-    """Fetch weather from Open-Meteo"""
-    try:
-        # Doha coordinates
-        lat, lon = 25.29, 51.53
-        url = f"https://api.open-meteo.com/v1/forecast"
-        params = {
-            "latitude": lat,
-            "longitude": lon,
-            "current_weather": "true",
-            "hourly": "temperature_2m,weathercode",
-            "daily": "weathercode,temperature_2m_max,temperature_2m_min",
-            "timezone": "Asia/Qatar",
-        }
-        resp = requests.get(url, params=params, timeout=10)
-        return resp.json()
-    except Exception as e:
-        print(f"Error fetching weather: {e}")
-        return {}
+def fetch_weather():
+    """Fetch weather from Open-Meteo for Doha and Al Udeid"""
+    weather_data = {}
+    
+    locations = {
+        "doha": {"lat": 25.29, "lon": 51.53, "name": "Doha"},
+        "al_udeid": {"lat": 25.12, "lon": 51.32, "name": "Al Udeid Air Base"},
+    }
+    
+    for key, loc in locations.items():
+        try:
+            url = "https://api.open-meteo.com/v1/forecast"
+            params = {
+                "latitude": loc["lat"],
+                "longitude": loc["lon"],
+                "current_weather": "true",
+                "hourly": "temperature_2m,weathercode",
+                "daily": "weathercode,temperature_2m_max,temperature_2m_min",
+                "forecast_days": 7,
+                "timezone": "Asia/Qatar",
+            }
+            resp = requests.get(url, params=params, timeout=10)
+            weather_data[key] = resp.json()
+            weather_data[key]["location_name"] = loc["name"]
+        except Exception as e:
+            print(f"Error fetching weather for {key}: {e}")
+    
+    return weather_data
 
 
 def fetch_market_news():
@@ -118,61 +127,120 @@ def fetch_market_news():
 
 
 def fetch_middle_east_news():
-    """Fetch Middle East news from RSS feeds (Reuters, AP, BBC)"""
+    """Fetch Middle East news from multiple RSS feeds"""
     import xml.etree.ElementTree as ET
     
+    # Multiple sources for balanced coverage
     feeds = [
-        "https://www.aljazeera.com/xml/rss/all.xml",
-        "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml",
+        {"url": "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml", "source": "BBC"},
+        {"url": "https://www.aljazeera.com/xml/rss/all.xml", "source": "Al Jazeera"},
+        {"url": "https://rss.nytimes.com/services/xml/rss/nyt/MiddleEast.xml", "source": "NYT"},
+        {"url": "https://feeds.reuters.com/reuters/worldNews", "source": "Reuters"},
+    ]
+    
+    # Keywords to prioritize Middle East tension stories
+    priority_keywords = [
+        'israel', 'gaza', 'hamas', 'hezbollah', 'iran', 'lebanon', 
+        'yemen', 'houthi', 'red sea', 'syria', 'iraq', 'saudi', 
+        'qatar', 'uae', 'gulf', 'palestinian', 'netanyahu', 'tehran',
+        'strike', 'missile', 'attack', 'tension', 'conflict', 'war'
     ]
     
     articles = []
     
-    for feed_url in feeds:
+    for feed in feeds:
         try:
-            resp = requests.get(feed_url, timeout=10, headers={
-                'User-Agent': 'Mozilla/5.0 (compatible; BriefingBot/1.0)'
+            resp = requests.get(feed["url"], timeout=10, headers={
+                'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36'
             })
             if resp.status_code == 200:
                 root = ET.fromstring(resp.content)
-                for item in root.findall('.//item')[:3]:  # Top 3 from each
-                    title = item.find('title')
-                    desc = item.find('description')
-                    if title is not None:
+                for item in root.findall('.//item')[:10]:
+                    title_elem = item.find('title')
+                    desc_elem = item.find('description')
+                    if title_elem is not None:
+                        title = title_elem.text or ''
+                        desc = desc_elem.text if desc_elem is not None else ''
+                        
+                        # Score by relevance
+                        text_lower = (title + ' ' + desc).lower()
+                        relevance = sum(1 for kw in priority_keywords if kw in text_lower)
+                        
                         articles.append({
-                            'title': title.text,
-                            'description': desc.text if desc is not None else '',
-                            'source': 'BBC' if 'bbc' in feed_url else 'Al Jazeera'
+                            'title': title,
+                            'description': desc,
+                            'source': feed["source"],
+                            'relevance': relevance
                         })
         except Exception as e:
-            print(f"Error fetching {feed_url}: {e}")
+            print(f"  Error fetching {feed['source']}: {e}")
     
-    return articles[:5]  # Top 5 overall
+    # Sort by relevance, take top stories
+    articles.sort(key=lambda x: x['relevance'], reverse=True)
+    
+    # Deduplicate by similar titles
+    seen = set()
+    unique = []
+    for a in articles:
+        title_key = a['title'][:50].lower()
+        if title_key not in seen:
+            seen.add(title_key)
+            unique.append(a)
+    
+    return unique[:5]
 
 
 def generate_news_script(data):
-    """Generate Middle East news analysis - conversational"""
+    """Generate Middle East news analysis - tension-aware, analytical"""
     news = data.get("news", {})
     articles = news.get("middle_east", [])
     
     if not articles:
-        return "No major Middle East news to report right now. Things seem relatively quiet."
+        return "Quiet day on the Middle East front. No major developments to report."
     
-    script = "Alright, let's talk about what's happening in the region. "
+    # Check for high-tension keywords
+    tension_keywords = ['strike', 'attack', 'missile', 'killed', 'war', 'escalat', 'threat']
+    high_tension = any(
+        any(kw in a.get('title', '').lower() for kw in tension_keywords)
+        for a in articles[:3]
+    )
     
-    # Analyze the headlines
+    script = ""
+    
+    if high_tension:
+        script += "Alright, heads up — there's significant tension in the region right now. "
+    else:
+        script += "Here's what's happening in the Middle East. "
+    
+    # Summarize top stories with analysis
     for i, article in enumerate(articles[:3]):
         title = article.get('title', '')
         source = article.get('source', '')
+        relevance = article.get('relevance', 0)
+        
+        # Clean up title for speech
+        title = title.replace('—', '-').replace('"', '').replace("'", "")
         
         if i == 0:
-            script += f"The big story: {title}. "
-        elif i == 1:
-            script += f"Also worth noting: {title}. "
+            script += f"Top story: {title}. "
+            if relevance > 3:
+                script += "This is a significant development. "
         else:
-            script += f"And {title}. "
+            script += f"{title}. "
     
-    script += "I'll keep an eye on these and let you know if anything develops."
+    # Context based on what we're seeing
+    combined = ' '.join(a.get('title', '').lower() for a in articles[:5])
+    
+    if 'gaza' in combined or 'israel' in combined:
+        script += "The Gaza situation continues to dominate headlines. "
+    if 'iran' in combined:
+        script += "Iran-related tensions are in play. Keep an eye on that. "
+    if 'houthi' in combined or 'red sea' in combined:
+        script += "Red Sea shipping disruptions ongoing. "
+    if 'saudi' in combined or 'uae' in combined:
+        script += "Gulf states making moves. "
+    
+    script += "That's your regional update. Stay safe out there."
     
     return script.strip()
 
@@ -257,42 +325,50 @@ def generate_summary_script(data):
     biggest_winner = movers[-1] if movers else None
     
     btc_change = crypto.get("bitcoin", {}).get("usd_24h_change", 0)
-    eth_change = crypto.get("ethereum", {}).get("usd_24h_change", 0)
     
-    temp = weather.get("current_weather", {}).get("temperature", "unknown")
+    # Weather data
+    doha_weather = weather.get("doha", {})
+    doha_temp = doha_weather.get("current_weather", {}).get("temperature", 20)
     
     # Build conversational script
     script = f"Morning Bernhard. {date}. "
     
+    # Weather upfront
+    script += f"It's {doha_temp:.0f} degrees in Doha right now. "
+    
+    # Weekly trend
+    daily = doha_weather.get("daily", {})
+    if daily.get("temperature_2m_max"):
+        week_highs = daily["temperature_2m_max"][:7]
+        avg_high = sum(week_highs) / len(week_highs) if week_highs else doha_temp
+        if avg_high > 30:
+            script += "Staying hot all week. "
+        elif avg_high > 25:
+            script += "Nice weather ahead for the week. "
+        else:
+            script += "Cooler week coming up. "
+    
     # Lead with the main story
     if abs(btc_change) > 5:
-        script += f"Crypto's having a rough day — Bitcoin's down about {abs(btc_change):.0f} percent. "
-        script += "Looks like risk-off sentiment across the board. "
+        script += f"Crypto's taking a hit — Bitcoin's down about {abs(btc_change):.0f} percent. "
     
     # Stock narrative
-    if biggest_loser and biggest_loser[1] < -3:
-        script += f"{biggest_loser[0]} is taking the biggest hit in your portfolio today. "
-    
-    if biggest_winner and biggest_winner[1] > 1:
-        script += f"On the bright side, {biggest_winner[0]} is holding up well. "
-    
-    # Overall vibe
     avg_change = sum(m[1] for m in movers) / len(movers) if movers else 0
     if avg_change < -2:
-        script += "Overall, it's a red day — but nothing to panic about. Markets do this. "
+        script += "Red day in the markets. "
+        if biggest_loser and biggest_loser[1] < -3:
+            script += f"{biggest_loser[0]} is your biggest drag. "
     elif avg_change > 1:
-        script += "Green across the board today — nice to see. "
+        script += "Green day for your portfolio. "
     else:
-        script += "Markets are mixed, nothing dramatic. "
-    
-    # Weather casual
-    script += f"It's {temp:.0f} degrees in Doha. "
+        script += "Markets are mixed today. "
     
     # Middle East news teaser
-    if news.get("middle_east"):
-        script += "I've got some Middle East updates for you in the news section. "
+    me_news = news.get("middle_east", [])
+    if me_news and me_news[0].get('relevance', 0) > 2:
+        script += "There's some significant Middle East news to cover. "
     
-    script += "Tap into any section if you want the deeper analysis."
+    script += "Check the sections for the full breakdown."
     
     return script.strip()
 
@@ -411,46 +487,67 @@ def generate_crypto_script(data):
 
 
 def generate_weather_script(data):
-    """Generate weather - casual and practical"""
+    """Generate weather - Doha, Al Udeid, and weekly outlook"""
     weather = data.get("weather", {})
-    current = weather.get("current_weather", {})
-    daily = weather.get("daily", {})
     
-    temp = current.get("temperature", 20)
-    wind = current.get("windspeed", 0)
-    code = current.get("weathercode", 0)
+    doha = weather.get("doha", {})
+    al_udeid = weather.get("al_udeid", {})
+    
+    doha_current = doha.get("current_weather", {})
+    udeid_current = al_udeid.get("current_weather", {})
+    
+    doha_temp = doha_current.get("temperature", 20)
+    udeid_temp = udeid_current.get("temperature", doha_temp)
+    doha_wind = doha_current.get("windspeed", 0)
+    udeid_wind = udeid_current.get("windspeed", 0)
     
     script = ""
     
-    # Casual weather description
-    if temp < 15:
-        script += "It's actually cool out today — grab a light jacket if you're heading out. "
-    elif temp < 22:
-        script += "Perfect weather today — not too hot, not too cold. Great day to be outside. "
-    elif temp < 30:
-        script += "Warming up out there. Comfortable but you'll want to stay hydrated. "
-    elif temp < 38:
-        script += "Hot one today. Standard Doha. AC is your friend. "
+    # Doha today
+    script += f"Doha right now: {doha_temp:.0f} degrees. "
+    
+    if doha_temp < 22:
+        script += "Nice and cool — enjoy it while it lasts. "
+    elif doha_temp < 30:
+        script += "Comfortable temperature. "
+    elif doha_temp < 38:
+        script += "Warm but manageable. "
     else:
-        script += "It's scorching out there. Maybe keep the outdoor activities to early morning or evening. "
+        script += "Hot one. Stay hydrated. "
     
-    # Wind
-    if wind > 30:
-        script += f"It's pretty windy — {wind:.0f} K per hour — might kick up some dust. "
-    elif wind > 15:
-        script += "There's a nice breeze which helps. "
+    # Al Udeid for weekday flying
+    script += f"Al Udeid is sitting at {udeid_temp:.0f} degrees. "
     
-    # Daily forecast
-    if daily and daily.get("temperature_2m_max"):
-        high = daily["temperature_2m_max"][0] if daily["temperature_2m_max"] else temp
-        if high > temp + 5:
-            script += f"Heads up — it'll get warmer later, hitting around {high:.0f} degrees. "
+    if udeid_wind > 25:
+        script += f"Watch the wind out there — {udeid_wind:.0f} K per hour. Could affect flight ops. "
+    elif udeid_wind > 15:
+        script += "Light winds at the base. "
+    else:
+        script += "Calm conditions at the base. "
     
-    # Practical advice
-    if code in [61, 63, 65, 80, 81, 82]:
-        script += "Looks like rain is possible — might want an umbrella just in case. "
+    # Weekly outlook
+    daily = doha.get("daily", {})
+    if daily.get("temperature_2m_max"):
+        highs = daily["temperature_2m_max"][:7]
+        lows = daily.get("temperature_2m_min", [])[:7]
+        
+        avg_high = sum(highs) / len(highs) if highs else doha_temp
+        
+        script += f"Looking at the week ahead: highs around {avg_high:.0f} degrees. "
+        
+        # Trend
+        if len(highs) >= 3:
+            early_week = sum(highs[:3]) / 3
+            late_week = sum(highs[3:]) / len(highs[3:]) if len(highs) > 3 else early_week
+            
+            if late_week > early_week + 3:
+                script += "Warming up toward the weekend. "
+            elif late_week < early_week - 3:
+                script += "Cooling down later in the week. "
+            else:
+                script += "Pretty consistent all week. "
     
-    script += "That's it for weather. Have a good one."
+    script += "Safe travels if you're heading to the base."
     
     return script.strip()
 
@@ -500,11 +597,22 @@ def generate_html(briefing_data, voice_files, output_dir):
             </div>
         '''
     
-    # Weather data
-    current_weather = weather.get("current_weather", {})
-    temp = current_weather.get("temperature", "N/A")
-    wind = current_weather.get("windspeed", 0)
-    weather_code = current_weather.get("weathercode", 0)
+    # Weather data (now has doha and al_udeid)
+    doha_weather = weather.get("doha", {})
+    al_udeid_weather = weather.get("al_udeid", {})
+    
+    doha_current = doha_weather.get("current_weather", {})
+    temp = doha_current.get("temperature", 20)
+    wind = doha_current.get("windspeed", 0)
+    weather_code = doha_current.get("weathercode", 0)
+    
+    udeid_temp = al_udeid_weather.get("current_weather", {}).get("temperature", temp)
+    udeid_wind = al_udeid_weather.get("current_weather", {}).get("windspeed", 0)
+    
+    # Weekly forecast
+    daily = doha_weather.get("daily", {})
+    week_highs = daily.get("temperature_2m_max", [])[:7] if daily else []
+    week_lows = daily.get("temperature_2m_min", [])[:7] if daily else []
     
     # Weather code to description
     weather_desc = {
@@ -531,6 +639,19 @@ def generate_html(briefing_data, voice_files, output_dir):
         news_items += f'<div>• {title} <span style="color: var(--text-muted);">({source})</span></div>'
     if not news_items:
         news_items = '<div>• No major news at this time</div>'
+    
+    # Build week forecast HTML
+    days = ['Today', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    week_forecast_html = ""
+    for i, (high, low) in enumerate(zip(week_highs[:7], week_lows[:7])):
+        day = days[i] if i < len(days) else f'Day {i+1}'
+        week_forecast_html += f'''
+            <div style="background: var(--bg-card-inner); padding: 8px 12px; border-radius: 8px; text-align: center;">
+                <div style="font-size: 0.7rem; color: var(--text-muted);">{day}</div>
+                <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary);">{high:.0f}°</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">{low:.0f}°</div>
+            </div>
+        '''
     
     html = f'''<!DOCTYPE html>
 <html lang="en">
@@ -893,27 +1014,33 @@ def generate_html(briefing_data, voice_files, output_dir):
                     <div class="card-icon cyan">🌤️</div>
                     <div>
                         <div class="card-title">Weather</div>
-                        <div class="card-subtitle">Doha, Qatar</div>
+                        <div class="card-subtitle">Doha & Al Udeid</div>
                     </div>
                 </div>
-                <div class="weather-main">
-                    <div class="weather-icon">{weather_emoji}</div>
-                    <div class="weather-temp">{temp}°C</div>
-                </div>
-                <div class="weather-details">
-                    <div class="weather-detail">💨 {wind:.0f} km/h wind</div>
-                    <div class="weather-detail">☁️ {weather_desc}</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">DOHA</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">{temp:.0f}°C</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">{weather_desc}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 4px;">AL UDEID</div>
+                        <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">{udeid_temp:.0f}°C</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">💨 {udeid_wind:.0f} km/h</div>
+                    </div>
                 </div>
                 
                 <div id="weather-panel" class="expand-panel">
                     <div class="panel-audio">
                         <button class="panel-play-btn" onclick="toggleAudio('weather-audio', this)">▶️</button>
-                        <span>Listen to weather forecast</span>
+                        <span>Listen to full forecast</span>
                         <audio id="weather-audio" src="audio_weather.wav"></audio>
                     </div>
                     <div class="panel-content">
-                        <h4>Extended Forecast</h4>
-                        <p>Current conditions and outlook for today.</p>
+                        <h4>Week Ahead</h4>
+                        <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                            {week_forecast_html}
+                        </div>
                     </div>
                 </div>
             </div>
