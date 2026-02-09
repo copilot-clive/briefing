@@ -18,8 +18,8 @@ cd "$BRIEFING_DIR"
 # Source the briefing venv (has yfinance)
 source "$BRIEFING_VENV/bin/activate"
 
-# Add kokoro to PYTHONPATH
-export PYTHONPATH="$KOKORO_VENV/lib/python3.11/site-packages:$PYTHONPATH"
+# Clear any conflicting PYTHONPATH
+unset PYTHONPATH
 
 # Run the generator
 python3 generator/generate_briefing.py

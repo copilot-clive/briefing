@@ -131,11 +131,12 @@ def fetch_middle_east_news():
     import xml.etree.ElementTree as ET
     
     # Multiple sources for balanced coverage
+    # Google News filtered for AP and Reuters only (wire services)
     feeds = [
-        {"url": "https://feeds.bbci.co.uk/news/world/middle_east/rss.xml", "source": "BBC"},
-        {"url": "https://www.aljazeera.com/xml/rss/all.xml", "source": "Al Jazeera"},
-        {"url": "https://rss.nytimes.com/services/xml/rss/nyt/MiddleEast.xml", "source": "NYT"},
-        {"url": "https://feeds.reuters.com/reuters/worldNews", "source": "Reuters"},
+        {"url": "https://news.google.com/rss/search?q=middle+east+site:apnews.com+when:1d&hl=en-US&gl=US&ceid=US:en", "source": "AP"},
+        {"url": "https://news.google.com/rss/search?q=middle+east+site:reuters.com+when:1d&hl=en-US&gl=US&ceid=US:en", "source": "Reuters"},
+        {"url": "https://news.google.com/rss/search?q=israel+OR+iran+site:apnews.com+when:1d&hl=en-US&gl=US&ceid=US:en", "source": "AP"},
+        {"url": "https://news.google.com/rss/search?q=israel+OR+iran+site:reuters.com+when:1d&hl=en-US&gl=US&ceid=US:en", "source": "Reuters"},
     ]
     
     # Keywords to prioritize Middle East tension stories
